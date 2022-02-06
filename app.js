@@ -23,7 +23,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// 3) ROUTES
+// 3) ROUTES // Hemos Importados las Rutas.
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 
