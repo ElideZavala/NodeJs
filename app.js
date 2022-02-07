@@ -10,8 +10,8 @@ const app = express();
 // Instalamos morgan.
 // npm i morgan
 app.use(morgan('dev')); // Estado de nuestra peticion.
-
 app.use(express.json());
+app.use(express.static(`${__dirname}/public`)); // No logramos entrar a las imagenes.
 
 app.use((req, res, next) => {
   console.log('Hello from the middleware 🙋‍♂️');
