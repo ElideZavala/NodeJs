@@ -1,12 +1,12 @@
-const dotenv = require('dotenv');
+const dotenv = require('dotenv'); // IMPORTAMOS dotenv PARA PODER USARLO.
+dotenv.config({ path: './config.env' }); // CONFIGURAMOS LA UBICACION DEL ARCHIVO CONFIG.
+
 const app = require('./app');
 
-dotenv.config({ path: './config.env' });
-
-console.log(process.env);
+// console.log(process.env);
 
 // SERVER
-const port = 3000;
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`App running on port ${port}...`);
 });

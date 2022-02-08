@@ -9,7 +9,11 @@ const app = express();
 // 1) MIDDLEWARES
 // Instalamos morgan.
 // npm i morgan
-app.use(morgan('dev')); // Estado de nuestra peticion.
+
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev')); // Estado de nuestra peticion.
+}
+
 app.use(express.json());
 app.use(express.static(`${__dirname}/public`)); // No logramos entrar a las imagenes.
 

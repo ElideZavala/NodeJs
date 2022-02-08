@@ -1,5 +1,6 @@
 {
   "extends": ["airbnb", "prettier", "plugin:node/recommended"],
+  "prettier/prettier": ["error", {"singleQuote": true, "parser": "flow"}],
   "plugins": ["prettier"],
   "rules": {
     "prettier/prettier": "error",
