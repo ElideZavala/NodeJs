@@ -3,8 +3,6 @@ dotenv.config({ path: './config.env' }); // CONFIGURAMOS LA UBICACION DEL ARCHIV
 
 const app = require('./app');
 
-// console.log(process.env);
-
 // SERVER
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
