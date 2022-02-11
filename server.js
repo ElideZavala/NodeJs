@@ -38,15 +38,18 @@ const tourSchema = new mongoose.Schema({
 const Tour = mongoose.model('Tour', tourSchema);
 
 const testTour = new Tour({
-  name: ' The Forest Hiker',
-  rating: 4.7,
-  price: 497,
+  name: 'The Parkk Camper',
+  price: 997,
 });
 
 testTour
   .save()
-  .then((doc) => console.log(doc))
-  .catch((err) => console.log('ERROR🎇:', err));
+  .then((doc) => {
+    console.log(doc);
+  })
+  .catch((err) => {
+    console.log('ERROR🎇:', err);
+  });
 
 // SERVER
 const port = process.env.PORT || 3000;
