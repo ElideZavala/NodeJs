@@ -29,11 +29,12 @@ const tours = JSON.parse(
 // IMPORT DATA INTO DB
 const importData = async () => {
   try {
-    await Tour.create();
+    await Tour.create(tours);
     console.log('Data successfully loaded');
   } catch (err) {
     console.log(err);
   }
+  process.exit();
 };
 
 // DELETE ALL DATA FROM COLLECTION
@@ -44,6 +45,7 @@ const deleteData = async () => {
   } catch (err) {
     console.log(err);
   }
+  process.exit();
 };
 
 if (process.argv[2] === '--import') {
