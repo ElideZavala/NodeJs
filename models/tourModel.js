@@ -7,7 +7,7 @@ const tourSchema = new mongoose.Schema({
     unique: true, // El dato debe ser unico entre todos los datos de la base de datos.
     trim: true, // Eliminara los espacios vacios que sean creados.
   },
-  durations: {
+  duration: {
     type: Number,
     required: [true, 'A tour must have a duration'],
   },
@@ -46,7 +46,12 @@ const tourSchema = new mongoose.Schema({
     type: String,
     require: [true, 'A tour must have a cover image'],
   },
-  images: 
+  images: [String],
+  createAt: {
+    type: Date,
+    default: Date.now(),
+  },
+  startDates: [Date],
 });
 
 const Tour = mongoose.model('Tour', tourSchema);

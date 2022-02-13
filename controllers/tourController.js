@@ -56,7 +56,7 @@ exports.createTour = async (req, res) => {
     // Solicitud rechasada.
     res.status(404).json({
       status: 'fail',
-      message: 'Invalid date sent!',
+      message: err,
     });
   }
 };
