@@ -2,17 +2,26 @@ const Tour = require('./../models/tourModel');
 
 exports.getAllTours = async (req, res) => {
   try {
-    console.log(req.query); // Las peticiones que se realizaron en postman
+    // BUILD QUERY
+    const queryObj = { ...req.query }; // desestruracion de los datos
+    const excludedFields = ['page', 'sort', 'limit', 'fields'];
+    excludedFields.forEach((el) => delete queryObj[el]);
+
+    // console.log(req.query, queryObj); // Las peticiones que se realizaron en postman
 
     //Busqueda de Elementos
-    const tours = await Tour.find(req.query);
+    const query = Tour.find(queryObj); // Devolvera una consulta
 
-    // const tours = await Tour.find()
+    // const query = await Tour.find()
     //   .where('duration')
     //   .equals(5)
     //   .where('difficulty')
     //   .equals('easy');
 
+    //EXECUTE QUERY
+    const tours = await query;
+
+    // SEMD RESPONSE
     res.status(200).json({
       status: 'success',
       results: tours.length,
