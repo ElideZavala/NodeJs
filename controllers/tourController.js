@@ -2,21 +2,29 @@ const Tour = require('./../models/tourModel');
 
 exports.getAllTours = async (req, res) => {
   try {
+    console.log(req.query);
+
     // BUILD QUERY
+    // 1) Filering
     const queryObj = { ...req.query }; // desestruracion de los datos
     const excludedFields = ['page', 'sort', 'limit', 'fields'];
     excludedFields.forEach((el) => delete queryObj[el]);
 
     // console.log(req.query, queryObj); // Las peticiones que se realizaron en postman
 
-    //Busqueda de Elementos
-    const query = Tour.find(queryObj); // Devolvera una consulta
+    // 2) Advanced filtering
+    let queryStr = JSON.stringify(queryObj); // Devolvera una consulta hecha en nuestro postman
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`); // hacer concidir con estas palabras (g)= sucedera varias veces. remplazara a estos valors solo para que tengan el signo $, ejemplp ($gte)
+    console.log(JSON.parse(queryStr));
 
+    //Busqueda de Elementos
     // const query = await Tour.find()
     //   .where('duration')
     //   .equals(5)
     //   .where('difficulty')
     //   .equals('easy');
+
+    const query = Tour.find(queryObj);
 
     //EXECUTE QUERY
     const tours = await query;
