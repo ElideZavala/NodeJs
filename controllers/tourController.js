@@ -5,26 +5,34 @@ exports.getAllTours = async (req, res) => {
     console.log(req.query);
 
     // BUILD QUERY
-    // 1) Filering
+    // 1A) Filering
     const queryObj = { ...req.query }; // desestruracion de los datos
     const excludedFields = ['page', 'sort', 'limit', 'fields'];
     excludedFields.forEach((el) => delete queryObj[el]);
 
     // console.log(req.query, queryObj); // Las peticiones que se realizaron en postman
 
-    // 2) Advanced filtering
+    // 1B) Advanced filtering
     let queryStr = JSON.stringify(queryObj); // Devolvera una consulta hecha en nuestro postman
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`); // hacer concidir con estas palabras (g)= sucedera varias veces. remplazara a estos valors solo para que tengan el signo $, ejemplp ($gte)
     console.log(JSON.parse(queryStr));
 
-    //Busqueda de Elementos
+    let query = Tour.find(JSON.parse(queryStr)); // Convertira lo que estamos buscando en un JSON para el queryy
+
+    //Busqueda de Elementos con otro metodo
     // const query = await Tour.find()
     //   .where('duration')
     //   .equals(5)
     //   .where('difficulty')
     //   .equals('easy');
 
-    const query = Tour.find(queryObj);
+    // 2) Sorting // Orden los archivos
+    if (req.query.sort) {
+      const sortBy = req.query.sort.split(',').join('');
+      console.log(sortBy);
+      query = query.sort(sortBy); // Realizamos este tipo de orden "127.0.0.1:3000/api/v1/tours?sort=price"
+      // sort('price ratingsAverage'); // Ordenar por dos formas en mongoose
+    } // Ordenar de mayor a menor 127.0.0.1:3000/api/v1/tours?sort=-price
 
     //EXECUTE QUERY
     const tours = await query;
