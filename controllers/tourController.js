@@ -50,13 +50,18 @@ exports.getAllTours = async (req, res) => {
     // TODO 4)  Pagination
     const page = req.query.page * 1 || 1; // convertimos la cadena a numero y por defecto tendremos la num. 1;
     const limit = req.query.limit * 1 || 100; // Valor por defecto sera 100
-    const skip = (page - 1) * limit; // Todos los resultados que vienen
+    const skip = (page - 1) * limit; // Todos los resultados que vienen.
     query = query.skip(skip).limit(limit); // Salto de pagina y su limite de elementos. tendremos 10 paginas de 10 elementos.
 
-    //EXECUTE QUERY
+    if (req.query.page) {
+      const numTours = await Tour.countDocuments(); // Contara la cantidad de elementos que existen.
+      if (skip >= numTours) throw new Error('This page does not exist'); // si skip es mayor a esa cantidad dara error.
+    }
+
+    // EXECUTE QUERY
     const tours = await query;
 
-    // SEMD RESPONSE
+    // SEND RESPONSE
     res.status(200).json({
       status: 'success',
       results: tours.length,
@@ -65,7 +70,7 @@ exports.getAllTours = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(400).json({
+    res.status(404).json({
       status: 'fail',
       msg: err,
     });
