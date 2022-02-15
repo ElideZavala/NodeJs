@@ -36,6 +36,16 @@ exports.getAllTours = async (req, res) => {
       query = query.sort('-createdAt'); // ordenar dependiendo los elementos creados
     }
 
+    // 3) Field limiting (Campos que solo queremos mostras o ser visibles)
+    if (req.query.fields) {
+      const fields = req.query.fields.split(',').join(' ');
+      query = query.select(fields); // Seleccionamos estos campos
+    } else {
+      query = query.select('-__v'); // Excluimos este campo utilizando el signo (-) => (Para no mostrar al cliente)
+    } // el _id simpre sera visible
+    // Igual se pueden hacer exclusiones usando el signo (-) en el query de nuestra pagina o de query
+    // Field puede ser muy util cuando tenemos datos muy sesibles que no deberia usarse internamente como contraseñas que nunca deben de exponerse al publico.
+
     //EXECUTE QUERY
     const tours = await query;
 
