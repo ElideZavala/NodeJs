@@ -4,7 +4,8 @@ exports.getAllTours = async (req, res) => {
   try {
     console.log(req.query);
 
-    // BUILD QUERY
+    // TODO BUILD QUERY
+
     // 1A) Filering
     const queryObj = { ...req.query }; // desestruracion de los datos
     const excludedFields = ['page', 'sort', 'limit', 'fields'];
@@ -36,7 +37,7 @@ exports.getAllTours = async (req, res) => {
       query = query.sort('-createdAt'); // ordenar dependiendo los elementos creados
     }
 
-    // 3) Field limiting (Campos que solo queremos mostras o ser visibles)
+    // TODO 3) Field limiting (Campos que solo queremos mostras o ser visibles)
     if (req.query.fields) {
       const fields = req.query.fields.split(',').join(' ');
       query = query.select(fields); // Seleccionamos estos campos
@@ -45,6 +46,12 @@ exports.getAllTours = async (req, res) => {
     } // el _id simpre sera visible
     // Igual se pueden hacer exclusiones usando el signo (-) en el query de nuestra pagina o de query
     // Field puede ser muy util cuando tenemos datos muy sesibles que no deberia usarse internamente como contraseñas que nunca deben de exponerse al publico.
+
+    // TODO 4)  Pagination
+    const page = req.query.page * 1 || 1; // convertimos la cadena a numero y por defecto tendremos la num. 1;
+    const limit = req.query.limit * 1 || 100; // Valor por defecto sera 100
+    const skip = (page - 1) * limit; // Todos los resultados que vienen
+    query = query.skip(skip).limit(limit); // Salto de pagina y su limite de elementos. tendremos 10 paginas de 10 elementos.
 
     //EXECUTE QUERY
     const tours = await query;
