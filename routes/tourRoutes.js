@@ -1,5 +1,6 @@
 const express = require('express');
 const {
+  aliasTopTours,
   getAllTours,
   createTour,
   getTour,
@@ -10,6 +11,8 @@ const {
 const router = express.Router();
 
 // router.param('id', checkID);
+
+router.route('/top-5-cheap').get(aliasTopTours, getAllTours);
 
 router.route('/').get(getAllTours).post(createTour);
 
