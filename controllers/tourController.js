@@ -7,14 +7,14 @@ exports.aliasTopTours = (req, res, next) => {
   next();
 };
 
-exports.getAllTours = async (req, res) => {
-  try {
-    console.log(req.query);
+class APIFeatures {
+  constructor(query, queryString) {
+    this.query = query;
+    this.queryString = queryString;
+  }
 
-    // TODO BUILD QUERY
-
-    // 1A) Filering
-    const queryObj = { ...req.query }; // desestruracion de los datos
+  filter() {
+    const queryObj = { ...this.queryString }; // desestruracion de los datos
     const excludedFields = ['page', 'sort', 'limit', 'fields'];
     excludedFields.forEach((el) => delete queryObj[el]);
 
@@ -24,7 +24,52 @@ exports.getAllTours = async (req, res) => {
     let queryStr = JSON.stringify(queryObj); // Devolvera una consulta hecha en nuestro postman
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`); // hacer concidir con estas palabras (g)= sucedera varias veces. remplazara a estos valors solo para que tengan el signo $, ejemplp ($gte)
 
-    let query = Tour.find(JSON.parse(queryStr)); // Convertira lo que estamos buscando en un JSON para el queryy
+    this.query.find(JSON.parse(queryStr));
+    // let query = Tour.find(JSON.parse(queryStr)); // Convertira lo que estamos buscando en un JSON para el queryy
+  }
+
+  sort() {
+    if (this.queryString.sort) {
+      const sortBy = req.query.sort.split(',').join('');
+      console.log(sortBy);
+      this.query = this.query.sort(sortBy); // Realizamos este tipo de orden "127.0.0.1:3000/api/v1/tours?sort=price"
+      // sort('price ratingsAverage'); // Ordenar por dos formas en mongoose
+      // Ordenar de mayor a menor 127.0.0.1:3000/api/v1/tours?sort=-price
+    } else {
+      this.query = this.query.sort('-createdAt'); // ordenar dependiendo los elementos creados
+    }
+  }
+
+  field() {
+    if (this.queryString.fields) {
+      const fields = this.queryString.fields.split(',').join(' ');
+      this.query = this.query.select(fields); // Seleccionamos estos campos
+    } else {
+      this.query = this.query.select('-__v'); // Excluimos este campo utilizando el signo (-) => (Para no mostrar al cliente)
+    } // el _id simpre sera visible
+    // Igual se pueden hacer exclusiones usando el signo (-) en el query de nuestra pagina o de query
+    // Field puede ser muy util cuando tenemos datos muy sesibles que no deberia usarse internamente como contraseñas que nunca deben de exponerse al publico.
+  }
+}
+
+exports.getAllTours = async (req, res) => {
+  try {
+    console.log(req.query);
+
+    // TODO BUILD QUERY
+
+    // 1A) Filering
+    // const queryObj = { ...req.query }; // desestruracion de los datos
+    // const excludedFields = ['page', 'sort', 'limit', 'fields'];
+    // excludedFields.forEach((el) => delete queryObj[el]);
+
+    // // console.log(req.query, queryObj); // Las peticiones que se realizaron en postman
+
+    // // 1B) Advanced filtering
+    // let queryStr = JSON.stringify(queryObj); // Devolvera una consulta hecha en nuestro postman
+    // queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`); // hacer concidir con estas palabras (g)= sucedera varias veces. remplazara a estos valors solo para que tengan el signo $, ejemplp ($gte)
+
+    // let query = Tour.find(JSON.parse(queryStr)); // Convertira lo que estamos buscando en un JSON para el queryy
 
     //Busqueda de Elementos con otro metodo
     // const query = await Tour.find()
@@ -34,22 +79,22 @@ exports.getAllTours = async (req, res) => {
     //   .equals('easy');
 
     // 2) Sorting // Orden los archivos
-    if (req.query.sort) {
-      const sortBy = req.query.sort.split(',').join('');
-      console.log(sortBy);
-      query = query.sort(sortBy); // Realizamos este tipo de orden "127.0.0.1:3000/api/v1/tours?sort=price"
-      // sort('price ratingsAverage'); // Ordenar por dos formas en mongoose
-      // Ordenar de mayor a menor 127.0.0.1:3000/api/v1/tours?sort=-price
-    } else {
-      query = query.sort('-createdAt'); // ordenar dependiendo los elementos creados
-    }
+    // if (req.query.sort) {
+    //   const sortBy = req.query.sort.split(',').join('');
+    //   console.log(sortBy);
+    //   query = query.sort(sortBy); // Realizamos este tipo de orden "127.0.0.1:3000/api/v1/tours?sort=price"
+    //   // sort('price ratingsAverage'); // Ordenar por dos formas en mongoose
+    //   // Ordenar de mayor a menor 127.0.0.1:3000/api/v1/tours?sort=-price
+    // } else {
+    //   query = query.sort('-createdAt'); // ordenar dependiendo los elementos creados
+    // }
 
     // TODO 3) Field limiting (Campos que solo queremos mostras o ser visibles)
-    if (req.query.fields) {
-      const fields = req.query.fields.split(',').join(' ');
-      query = query.select(fields); // Seleccionamos estos campos
-    } else {
-      query = query.select('-__v'); // Excluimos este campo utilizando el signo (-) => (Para no mostrar al cliente)
+    // if (req.query.fields) {
+    //   const fields = req.query.fields.split(',').join(' ');
+    //   query = query.select(fields); // Seleccionamos estos campos
+    // } else {
+    //   query = query.select('-__v'); // Excluimos este campo utilizando el signo (-) => (Para no mostrar al cliente)
     } // el _id simpre sera visible
     // Igual se pueden hacer exclusiones usando el signo (-) en el query de nuestra pagina o de query
     // Field puede ser muy util cuando tenemos datos muy sesibles que no deberia usarse internamente como contraseñas que nunca deben de exponerse al publico.
@@ -58,6 +103,7 @@ exports.getAllTours = async (req, res) => {
     const page = req.query.page * 1 || 1; // convertimos la cadena a numero y por defecto tendremos la num. 1;
     const limit = req.query.limit * 1 || 100; // Valor por defecto sera 100
     const skip = (page - 1) * limit; // Todos los resultados que vienen.
+    
     query = query.skip(skip).limit(limit); // Salto de pagina y su limite de elementos. tendremos 10 paginas de 10 elementos.
 
     if (req.query.page) {
@@ -66,7 +112,8 @@ exports.getAllTours = async (req, res) => {
     }
 
     // EXECUTE QUERY
-    const tours = await query;
+    const features = new APIFeatures(Tour.find(), req.query).filter().sort();
+    const tours = await features.query;
 
     // SEND RESPONSE
     res.status(200).json({
@@ -80,8 +127,7 @@ exports.getAllTours = async (req, res) => {
     res.status(404).json({
       status: 'fail',
       msg: err,
-    });
-  }
+      
 };
 
 exports.getTour = async (req, res) => {
