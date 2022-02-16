@@ -115,16 +115,18 @@ exports.deleteTour = async (req, res) => {
 
 exports.getTourStats = async (req, res) => {
   try {
-    const stats = Tour.aggregate([
+    const stats = await Tour.aggregate([
       // Consulta regular.
       {
         $match: { ratingsAverage: { $gte: 4.5 } }, // coincidir elementos con rangos mayor a un promedio de 4.5.
       },
       {
+        // Objetos dentro de objetos, llamado grupo
         $group: {
-          // Objetos dentro de objetos, llamado grupo
           _id: null,
-          avgRating: { $avg: '$ratingAverage' }, // Calcularemos el promedio de los promedios.
+          numTours: { $sum: 1 }, // sumaremos el numero total de documentos.
+          numRatings: { $sum: '$ratingsQuantity' }, //suma de las calificaciones
+          avgRating: { $avg: '$ratingsAverage' }, // Calcularemos el promedio de los promedios.
           avgPrice: { $avg: '$price' }, // Calculamos el prommedio de los precion.
           minPrime: { $min: '$price' }, // Calculamos el precio mas bajo.
           maxPrime: { $max: '$price' }, // Calculamos el precio mas alto.
