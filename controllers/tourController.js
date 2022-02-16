@@ -116,14 +116,13 @@ exports.deleteTour = async (req, res) => {
 exports.getTourStats = async (req, res) => {
   try {
     const stats = await Tour.aggregate([
-      // Consulta regular.
       {
         $match: { ratingsAverage: { $gte: 4.5 } }, // coincidir elementos con rangos mayor a un promedio de 4.5.
       },
       {
         // Objetos dentro de objetos, llamado grupo
         $group: {
-          _id: null,
+          _id: { $toUpper: '$difficulty' }, //  Especificar por alguna otra caracteristica.// se vera en MAYUSCULA
           numTours: { $sum: 1 }, // sumaremos el numero total de documentos.
           numRatings: { $sum: '$ratingsQuantity' }, //suma de las calificaciones
           avgRating: { $avg: '$ratingsAverage' }, // Calcularemos el promedio de los promedios.
@@ -131,6 +130,12 @@ exports.getTourStats = async (req, res) => {
           minPrime: { $min: '$price' }, // Calculamos el precio mas bajo.
           maxPrime: { $max: '$price' }, // Calculamos el precio mas alto.
         },
+      },
+      {
+        $sort: { avgPrice: 1 }, // Ordenamos por promedio-precio y ponemos 1 para ir ascendiendo.
+      },
+      {
+        $match: { _id: { $ne: 'EASY' } }, // Nuevo Operador que no sea igual a EASY-Select document que no sean EASY
       },
     ]);
 
