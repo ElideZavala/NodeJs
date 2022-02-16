@@ -112,3 +112,36 @@ exports.deleteTour = async (req, res) => {
     });
   }
 };
+
+exports.getTourStats = async (req, res) => {
+  try {
+    const stats = Tour.aggregate([
+      // Consulta regular.
+      {
+        $match: { ratingsAverage: { $gte: 4.5 } }, // coincidir elementos con rangos mayor a un promedio de 4.5.
+      },
+      {
+        $group: {
+          // Objetos dentro de objetos, llamado grupo
+          _id: null,
+          avgRating: { $avg: '$ratingAverage' }, // Calcularemos el promedio de los promedios.
+          avgPrice: { $avg: '$price' }, // Calculamos el prommedio de los precion.
+          minPrime: { $min: '$price' }, // Calculamos el precio mas bajo.
+          maxPrime: { $max: '$price' }, // Calculamos el precio mas alto.
+        },
+      },
+    ]);
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        stats,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err,
+    });
+  }
+};
