@@ -91,13 +91,18 @@ tourSchema.pre('save', function (next) {
 
 // QUERY MIDDLEWARE
 // Se ejecuta primero por que estamos en un gancho de busqueda con this.
-tourSchema.pre('find', function (next) {
+tourSchema.pre(/^find/, function (next) {
+  // /^find/, Se debe ejecutar con todos los valores que empicen con find.
+  // tourSchema.pre('find', function (next) {
   this.find({ secretTour: { $ne: true } }); // Encontrar un secretTour que no sea igual a true.( No son secretos)
+
+  this.start = Date.now(); // Fecha actual
   next();
 });
 
-tourSchema.pre('findOne', function (next) {
-  this.find({ secretTour: { $ne: true } }); // Encontrar un secretTour que no sea igual a true.( No son secretos)
+tourSchema.post(/^find/, function (docs, next) {
+  console.log(`Query took ${Date.now() - this.start} milliseconds!`); // calculamos cuanto tiempo toma en ejecutarse
+  console.log(docs);
   next();
 });
 
