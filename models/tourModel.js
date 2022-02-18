@@ -102,7 +102,14 @@ tourSchema.pre(/^find/, function (next) {
 
 tourSchema.post(/^find/, function (docs, next) {
   console.log(`Query took ${Date.now() - this.start} milliseconds!`); // calculamos cuanto tiempo toma en ejecutarse
-  console.log(docs);
+  next();
+});
+
+// AGGREGATION MIDDLEWARE // Canalizacion de nuesto esquema formado en getTourStats con Tour.aggregate
+tourSchema.pre('aggregate', function (next) {
+  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } }); // Agregamos elementos a nuestro pipeline()
+  // los cuales son los secretTour que no sean true, eliminando los otros.
+  console.log(this.pipeline()); // con this ejecutamos un aggregate y
   next();
 });
 
