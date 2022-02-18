@@ -56,6 +56,10 @@ const tourSchema = new mongoose.Schema(
       select: false, // no se mostrara el field en la peticion por el cliente.
     },
     startDates: [Date],
+    secretTour: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     toJSON: { virtuals: true }, // Los JSON se genera virualmente .
@@ -84,6 +88,18 @@ tourSchema.pre('save', function (next) {
 //   console.log(doc);
 //   next();
 // });
+
+// QUERY MIDDLEWARE
+// Se ejecuta primero por que estamos en un gancho de busqueda con this.
+tourSchema.pre('find', function (next) {
+  this.find({ secretTour: { $ne: true } }); // Encontrar un secretTour que no sea igual a true.( No son secretos)
+  next();
+});
+
+tourSchema.pre('findOne', function (next) {
+  this.find({ secretTour: { $ne: true } }); // Encontrar un secretTour que no sea igual a true.( No son secretos)
+  next();
+});
 
 const Tour = mongoose.model('Tour', tourSchema);
 
