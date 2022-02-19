@@ -15,7 +15,8 @@
     "mongoose": "^5.13.14",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.15",
-    "slugify": "^1.6.5"
+    "slugify": "^1.6.5",
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "eslint": "^8.8.0",
