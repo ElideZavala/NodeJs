@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 
+const AppError = require('./utils/appError');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 
@@ -28,21 +29,14 @@ app.use('/api/v1/users', userRouter);
 
 // .all Se ejecuta para todos los verbos{get, post, patch, delete} * Representara que todo esta bien
 app.all('*', (req, res, next) => {
-  // * Todas las URL se almacenan en el cache.
-  // res.status(404).json({
-  //   status: 'fail',
-  //   message: `Can't find ${req.originalUrl} on this server!`, // Error de no podemos encontrar la pagina orginal.
-  // });
-
   // Utilizamos Error para establer una variable de error y poder ser utlizada en futuros errores.
-  const err = new Error(`Can't find ${req.originalUrl} on this server!`);
-  err.status = 'fail';
-  err.statusCode = 404;
-
-  next(err); // El error pasara al siguiente middleware
+  // Importamos nuestra clase la cual mandamos nuestro msg de Error y el status de la  peticion a la API.
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404)); // El error pasara al siguiente middleware
 });
 
 app.use((err, req, res, next) => {
+  console.log(err.stack); // Nos muestra la direccion de nuestro error. // Seguimiento de la pila
+
   err.statusCode = err.statusCode || 500;
   err.status = err.status || 'error';
 
