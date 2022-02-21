@@ -63,6 +63,10 @@ exports.updateTour = catchAsync(async (req, res, next) => {
     runValidators: true, // Corremo igualmente los validadores de nuestro tourModel(model).
   });
 
+  if (!tour) {
+    return next(new AppError('No tour found with that ID', 404)); // return para parar y ni pasar al sig codigo.
+  }
+
   res.status(200).json({
     status: 'success',
     data: {
@@ -72,7 +76,11 @@ exports.updateTour = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteTour = catchAsync(async (req, res, next) => {
-  await Tour.findByIdAndDelete(req.params.id);
+  const tour = await Tour.findByIdAndDelete(req.params.id);
+
+  if (!tour) {
+    return next(new AppError('No tour found with that ID', 404)); // return para parar y ni pasar al sig codigo.
+  }
 
   res.status(204).json({
     status: 'success',
