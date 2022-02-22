@@ -18,10 +18,14 @@ mongoose
     useCreateIndex: true,
     useFindAndModify: false,
   })
-  .then(() => console.log('DB connection successful!'));
+  .then(() => console.log('DB connection successful!'))
+  .catch((err) => console.log('ERROR'));
 
 // SERVER
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`App running on port ${port}...`);
 });
+
+// Emicion de conceptos con errores .on => como encendido
+process.on('unhandledRejection', (err) => {});
