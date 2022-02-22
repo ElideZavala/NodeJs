@@ -23,9 +23,16 @@ mongoose
 
 // SERVER
 const port = process.env.PORT || 3000;
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`App running on port ${port}...`);
 });
 
 // Emicion de conceptos con errores .on => como encendido
-process.on('unhandledRejection', (err) => {});
+process.on('unhandledRejection', (err) => {
+  console.log(err.name, err.message); // Registramos todos los errores en la consola.
+  console.log('UNHANDLER REJECTION! 🎃🕯 Shutting down...');
+  server.close(() => {
+    // Cerrara el servidor y ejecutara los siguiente.
+    process.exit(1); // Apagar el Servidor.
+  });
+});
