@@ -1,6 +1,13 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv'); // IMPORTAMOS dotenv PARA PODER USARLO.
 
+// Excepción no detectada(uncaughtException)
+process.on('uncaughtException', (err) => {
+  console.log('UNCAUGHT EXCEPTION! 🎃🕯 Shutting down...');
+  console.log(err.name, err.message); // Registramos todos los errores en la consola.
+  process.exit(1); // Apagar el Servidor. // Cerrara el servidor y ejecutara los siguiente.
+});
+
 dotenv.config({ path: './config.env' }); // CONFIGURAMOS LA UBICACION DEL ARCHIVO CONFIG.
 const app = require('./app');
 
@@ -29,8 +36,8 @@ const server = app.listen(port, () => {
 
 // Emicion de conceptos con errores .on => como encendido
 process.on('unhandledRejection', (err) => {
-  console.log(err.name, err.message); // Registramos todos los errores en la consola.
   console.log('UNHANDLER REJECTION! 🎃🕯 Shutting down...');
+  console.log(err.name, err.message); // Registramos todos los errores en la consola.
   server.close(() => {
     // Cerrara el servidor y ejecutara los siguiente.
     process.exit(1); // Apagar el Servidor.
