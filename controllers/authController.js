@@ -11,10 +11,14 @@ exports.signup = catchAsync(async (req, res, next) => {
     passwordConfirm: req.body.passwordConfirm,
   });
 
-  const token = jwt.sign({ id: newUser._id }, 'secret');
+  // Generamos nuestro token con nuestro _id de mongo, la frase secreta y el tiempo en que expirara el token.
+  const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN,
+  });
 
   res.status(201).json({
     status: 'success',
+    token,
     data: {
       user: newUser,
     },
