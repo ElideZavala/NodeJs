@@ -1,18 +1,19 @@
 const mongoose = require('mongoose');
 const validator = require('validator'); // Validar en mongoose.
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, 'Please tell us your name!'],
-    unique: true,
+    // unique: true,
   },
   email: {
     type: String,
     required: [true, 'A user must have a email'],
     unique: true,
-    lowercase: true, // Transformara el correo electronico en minusculas.
-    validate: [validator.isEmail, 'Please provide a valid email'],
+    lowercase: true, // Will convert the email to lowercase
+    validate: [validator.isEmail, 'Please provide a valid email'], // We validate a real email
   },
   photo: String,
   password: {
@@ -25,12 +26,27 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please confirm your password'],
     validator: {
+      // This only works on CREATE and SAVE!! =>  It will only work when we create a new object
       validator: function (val) {
         return val === this.password;
       },
-      message: 'PasswworConfirm must equal to password',
+      message: 'Passwords are not the same!',
     },
   },
+});
+
+// Middleware pre-save
+userSchema.pre('save', async function (next) {
+  //Only run this function if password was actually modified
+  if (!this.isModified('password')) return next(); // if the password is changed to password.
+
+  // Hash the possword with cost of 12.
+  this.password = await bcrypt.hash(this.password, 12); // the password will be encrypted with 12 characters.
+
+  // Delete passwordConfirm field.
+  this.passwordConfirm = undefined;
+
+  next();
 });
 
 const User = mongoose.model('User', userSchema);
