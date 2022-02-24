@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Please provide a password'],
     mixlength: [8, 'A paswword must have more or equal then 8 characters'],
     // maxlength: [15, 'A paswword less have more or equal then 8 characters'],
+    select: false, // La contraseña nunca aparecera automaticamente
   },
   passwordConfirm: {
     type: String,
