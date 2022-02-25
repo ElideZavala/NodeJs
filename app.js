@@ -21,6 +21,7 @@ app.use(express.static(`${__dirname}/public`)); // No logramos entrar a las imag
 
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString(); // Optenemos la hora Actual.
+  console.log(req.headers);
   next();
 });
 
