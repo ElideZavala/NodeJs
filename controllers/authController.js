@@ -26,7 +26,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.login = (req, res, next) => {
+exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
   // 1) Check if email and password exit. // Si pasamos el correo y la contraseña
@@ -35,7 +35,9 @@ exports.login = (req, res, next) => {
   }
 
   // 2) Check if user exits && password is correct.
-  const user = User.findOne({ email });
+  const user = await User.findOne({ email }).select('+password'); // Seleccionamos los campos requeridos.
+
+  console.log(user);
 
   // 3) If everything ok, send token to client.
   const token = '';
@@ -43,4 +45,4 @@ exports.login = (req, res, next) => {
     status: 'success',
     token,
   });
-};
+});
