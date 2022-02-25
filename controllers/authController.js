@@ -1,3 +1,4 @@
+const { promisify } = require('util'); // Metodo para crear una utilidad.
 const jwt = require('jsonwebtoken');
 const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
@@ -64,7 +65,6 @@ exports.protect = catchAsync(async (req, res, next) => {
   ) {
     token = req.headers.authorization.split(' ')[1];
   }
-  console.log(token);
 
   if (!token) {
     return next(
@@ -73,6 +73,8 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
 
   // 2) Verification token.
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET); // Utilizamos promisify de util.
+  console.log(decoded); // Obtenemos nuestro Id con las variables id,iat y exp. // Lo mismo realizado en JWT.io.
 
   // 3) Check if user still exists.
 
