@@ -74,9 +74,16 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   // 2) Verification token.
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET); // Utilizamos promisify de util.
-  console.log(decoded); // Obtenemos nuestro Id con las variables id,iat y exp. // Lo mismo realizado en JWT.io.
+  //Obtenemos nuestro Id con las variables id,iat y exp. // Lo mismo realizado en JWT.io.
 
   // 3) Check if user still exists.
+  const freshUser = await User.findById(decoded.id); // tomamos el id de nuestro tokes desestructurado.
+  if (!freshUser) {
+    return next(
+      new AppError('The user belonging to this token does no longer exist'), // En caso de que sea false.
+      401
+    );
+  }
 
   // 4) Check if user changed password after the JWT.
 
