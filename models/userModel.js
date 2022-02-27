@@ -68,7 +68,6 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
       10
     );
 
-    console.log(changedTimestamp, JWTTimestamp);
     return JWTTimestamp < changedTimestamp; // El dia y la hora en que se emitio el token fue menor // 100 < 200
     // Significa que la contraseña a cambiado.
   }

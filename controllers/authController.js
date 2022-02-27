@@ -77,8 +77,8 @@ exports.protect = catchAsync(async (req, res, next) => {
   //Obtenemos nuestro Id con las variables id,iat y exp. // Lo mismo realizado en JWT.io.
 
   // 3) Check if user still exists.
-  const freshUser = await User.findById(decoded.id); // tomamos el id de nuestro tokes desestructurado.
-  if (!freshUser) {
+  const currentUser = await User.findById(decoded.id); // tomamos el id de nuestro tokes desestructurado.
+  if (!currentUser) {
     return next(
       new AppError('The user belonging to this token does no longer exist'), // En caso de que sea false.
       401
@@ -86,7 +86,13 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
 
   // 4) Check if user changed password after the JWT.
-  freshUser.changedPasswordAfter(decoded.iat); // Checar si el usuario a cambiado la contraseña.
+  if (currentUser.changedPasswordAfter(decoded.iat)) {
+    return next(
+      new AppError('User recently changed password! Please log in again.', 401)
+    );
+  } // Checar si el usuario a cambiado la contraseña.
 
+  // GRANT ACCESS TO PROTECTED ROUTE.
+  req.user = currentUser; // Llegara a este punto en caso de que todo sea correcto.
   next();
 });
