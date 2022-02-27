@@ -59,13 +59,21 @@ userSchema.methods.correctPassword = async function (
   return await bcrypt.compare(candidatePassword, userPassword); // Comparamos estas dos contraseñas y dependiendo nos regresara un true o false.
 };
 
+// Marcar el tiempo en que fue emitido el token.
 userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
   if (this.passwordChangedAt) {
-    const changedTimestamp = this.passwordChangedAt.getTime();
     //si no existe nunca ha cambiado la contraseña.-
+    const changedTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000, // Nos regresara un entero.. con base en 10.
+      10
+    );
+
     console.log(changedTimestamp, JWTTimestamp);
+    return JWTTimestamp < changedTimestamp; // El dia y la hora en que se emitio el token fue menor // 100 < 200
+    // Significa que la contraseña a cambiado.
   }
 
+  // False means NOT changes // La contraseña aun no ha cambiado.
   return false;
 };
 
