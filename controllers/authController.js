@@ -86,6 +86,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
 
   // 4) Check if user changed password after the JWT.
+  freshUser.changedPasswordAfter(decoded.iat); // Checar si el usuario a cambiado la contraseña.
 
   next();
 });
