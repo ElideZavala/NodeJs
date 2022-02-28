@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
+const sendEmail = require('./../utils/email');
 
 // Tomara el id y lo regresara de inmediato en un token.
 const signToken = (id) => {
@@ -128,5 +129,21 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   await user.save(); // desactivara todos los validadores en nuestro Schemaa
 
   // 3) Send it to user's email
+  const resetUrl = `${req.protocol}://${req.get(
+    'host'
+  )}/api/v1/users/resetPassword/${resetToken}`;
+
+  const message = `Forgot yout password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\nIf you didn't forget your password, please ignore this email!`;
+
+  await sendEmail({
+    email: user.email,
+    subject: 'Your password reset token (valid for 10 min)',
+    message,
+  });
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Token sent to email',
+  });
 });
 exports.resetPassword = (req, res, next) => {};
