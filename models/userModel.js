@@ -1,3 +1,4 @@
+const crypto = require('crypto'); // Puntos critograficos.
 const mongoose = require('mongoose');
 const validator = require('validator'); // Validar en mongoose.
 const bcrypt = require('bcryptjs');
@@ -40,6 +41,8 @@ const userSchema = new mongoose.Schema({
     },
   },
   passwordChangedAt: Date,
+  passwordResetToken: String,
+  passwordResetExpires: Date, // El restablecimiento caducara despues de un cierto periodo de tiempo.
 });
 
 // Middleware pre-save
@@ -79,6 +82,20 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
 
   // False means NOT changes // La contraseña aun no ha cambiado.
   return false;
+};
+
+userSchema.methods.createPasswordResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString('hex'); // Metodo randomBytes, especificar la cantidad de caracteres. // Especificar la opcion hexadecimal. // Contraseña de restablecimiento para crear otra.
+
+  this.passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+  // aLgoritmo, contraseña a cambiar y almacenarlo como hexagonal.
+
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000; // Tiempo para expirar enta password temporal.
+
+  return resetToken;
 };
 
 const User = mongoose.model('User', userSchema);
