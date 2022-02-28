@@ -10,7 +10,7 @@ const {
   deleteTour,
 } = require('../controllers/tourController');
 
-const { protect } = require('../controllers/authController');
+const { protect, restrictTo } = require('../controllers/authController');
 
 const router = express.Router();
 
