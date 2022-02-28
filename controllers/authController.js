@@ -18,6 +18,8 @@ exports.signup = catchAsync(async (req, res, next) => {
     email: req.body.email,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
+    passwordChangedAt: req.body.passwordChangedAt,
+    role: req.body.role,
   });
 
   // Generamos nuestro token con nuestro _id de mongo, la frase secreta y el tiempo en que expirara el token.
@@ -96,3 +98,5 @@ exports.protect = catchAsync(async (req, res, next) => {
   req.user = currentUser; // Llegara a este punto en caso de que todo sea correcto.
   next();
 });
+
+exports.restricTo = (...roles) => {};
