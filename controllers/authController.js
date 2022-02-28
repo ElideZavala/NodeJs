@@ -20,6 +20,8 @@ exports.signup = catchAsync(async (req, res, next) => {
     passwordConfirm: req.body.passwordConfirm,
     passwordChangedAt: req.body.passwordChangedAt,
     role: req.body.role,
+    passwordResetToken: req.body.passwordResetToken,
+    passwordResetExpires: req.body.passwordResetExpires,
   });
 
   // Generamos nuestro token con nuestro _id de mongo, la frase secreta y el tiempo en que expirara el token.
@@ -122,6 +124,8 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   }
 
   // 2) Generate the random reset token
+  const resetToken = user.createPasswordResetToken();
+  await user.save(); // desactivara todos los validadores en nuestro Schemaa
 
   // 3) Send it to user's email
 });

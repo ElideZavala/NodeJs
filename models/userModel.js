@@ -93,6 +93,8 @@ userSchema.methods.createPasswordResetToken = function () {
     .digest('hex');
   // aLgoritmo, contraseña a cambiar y almacenarlo como hexagonal.
 
+  console.log({ resetToken }, this.passwordResetToken);
+
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000; // Tiempo para expirar enta password temporal.
 
   return resetToken;
