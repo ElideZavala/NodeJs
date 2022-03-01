@@ -59,7 +59,10 @@ userSchema.pre('save', async function (next) {
   next();
 });
 userSchema.pre('save', function (next) {
-  if (!this.isModified('password')) return next(); // En caso de no haber modificado la contraseña. continuamos
+  if (!this.isModified('password') || this.isNew) return next(); // En caso de no haber modificado la contraseña. continuamos o si el documento es nuevo.
+
+  this.passwordChangedAt = Date.now() - 1000; //pondra la contraseña con un segundo en el pasado --Aseguramos que token simpre se cree después de que haya cambiado la contraseña
+  next();
 });
 
 // Creamos un metodo que va a llevar la funcion correctPassword
