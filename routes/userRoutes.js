@@ -11,6 +11,7 @@ const {
   login,
   forgotPassword,
   resetPassword,
+  updatePassword,
 } = require('../controllers/authController');
 
 const router = express.Router();
@@ -20,6 +21,7 @@ router.post('/login', login);
 
 router.post('/forgotPassword', forgotPassword);
 router.patch('/resetPassword/:token', resetPassword);
+router.patch('/actualityPassword/:token', updatePassword);
 
 // Router FILOSOFIA REST.
 router.route('/').get(getAllUsers).post(createUser);
