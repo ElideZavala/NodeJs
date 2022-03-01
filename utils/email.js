@@ -13,7 +13,7 @@ const sendEmail = async (options) => {
 
   // 2) Define the email options
   const mailOptions = {
-    from: 'Elide Zavala Vinagre <zavalavinagreelide@gmail.com>',
+    from: 'Elide Zavala Vinagre <admin@gmail.com>',
     to: options.email, // Correo al que lo vamos enviar.
     subject: options.subject, // Asunto
     text: options.message, // mensaje del correo electronico.
@@ -21,7 +21,7 @@ const sendEmail = async (options) => {
   };
 
   // 1) Actually send the email
-  await transporter.sendMail(mailOptions);
+  await transporter.sendMail(mailOptions); // Enviamos el Email.
 };
 
 module.exports = sendEmail;

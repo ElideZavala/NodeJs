@@ -18,7 +18,7 @@
     "mongoose": "^5.13.14",
     "morgan": "^1.10.0",
     "ndb": "^1.1.5",
-    "nodemailer": "^6.7.2",
+    "nodemailer": "^4.7.0",
     "nodemon": "^2.0.15",
     "slugify": "^1.6.5",
     "validator": "^13.7.0"
