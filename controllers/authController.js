@@ -186,5 +186,11 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   await user.save(); //Guardamos de nuevacuenta el usuario.// Queremos confirmar que la confirmacion de password se iuales // Si a la validacion.
 
   // 3) Update changedPasswordAt property for the user.
+
   // 4) Log the user in, send JWT
+  const token = signToken(user._id);
+  res.status(200).json({
+    status: 'success',
+    token,
+  });
 });

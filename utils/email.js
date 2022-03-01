@@ -9,11 +9,13 @@ const sendEmail = async (options) => {
       user: process.env.EMAIL_USERNAME,
       pass: process.env.EMAIL_PASSWORD,
     },
+    debug: true,
+    logger: true,
   });
 
   // 2) Define the email options
   const mailOptions = {
-    from: 'Elide Zavala Vinagre <admin@gmail.com>',
+    from: 'Elide Zavala <admin@gmail.com>',
     to: options.email, // Correo al que lo vamos enviar.
     subject: options.subject, // Asunto
     text: options.message, // mensaje del correo electronico.

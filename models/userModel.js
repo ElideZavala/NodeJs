@@ -58,6 +58,9 @@ userSchema.pre('save', async function (next) {
 
   next();
 });
+userSchema.pre('save', function (next) {
+  if (!this.isModified('password')) return next(); // En caso de no haber modificado la contraseña. continuamos
+});
 
 // Creamos un metodo que va a llevar la funcion correctPassword
 userSchema.methods.correctPassword = async function (
