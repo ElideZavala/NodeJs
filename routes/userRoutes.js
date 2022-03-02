@@ -5,6 +5,7 @@ const {
   getUser,
   updateUser,
   deleteUser,
+  updateMe,
 } = require('../controllers/userController');
 const {
   signup,
@@ -12,6 +13,7 @@ const {
   forgotPassword,
   resetPassword,
   updatePassword,
+  protect,
 } = require('../controllers/authController');
 
 const router = express.Router();
@@ -21,7 +23,9 @@ router.post('/login', login);
 
 router.post('/forgotPassword', forgotPassword);
 router.patch('/resetPassword/:token', resetPassword);
-router.patch('/actualityPassword/:token', updatePassword);
+router.patch('/updateMyPassword', updatePassword);
+
+router.patch('/updateMe', protect, updateMe);
 
 // Router FILOSOFIA REST.
 router.route('/').get(getAllUsers).post(createUser);
