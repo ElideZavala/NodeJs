@@ -15,6 +15,21 @@ const signToken = (id) => {
 
 const createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
+  const cookieOptions = {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ), // expira hasta que el navegador cierro o el cliente las elimine. apartir de la fecha actual // milisegundos
+    httpOnly: true, // Permitira que el navegador no pueda acceder a la cookie ni modificarla de ninguna manera.
+  };
+
+  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+
+  // Remove password from output
+  user.password = undefined;
+
+  // Adjuntar el cookie al objeto de respuesta. // we want send the tokes. + Opciones para la cookie.
+  //Fragmento de codigo que queremos guardar en nuestro navegador
+  res.cookie('jwt', token, cookieOptions);
 
   res.status(statusCode).json({
     status: 'success',
