@@ -53,6 +53,19 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   });
 });
 
+// Desactivar un Usuario
+exports.deleteMe = catchAsync(async (req, res, next) => {
+  await User.findByIdAndUpdate(req.user.id, {
+    active: false,
+  });
+
+  res.status(204).json({
+    status: 'success',
+    data: null, // Ya no existen los datos.
+  });
+});
+
+// Obtener un Usuario
 exports.getUser = (req, res) => {
   res.status(500).json({
     status: 'error',
@@ -60,6 +73,7 @@ exports.getUser = (req, res) => {
   });
 };
 
+// Crear un Usuario
 exports.createUser = (req, res) => {
   res.status(500).json({
     status: 'error',

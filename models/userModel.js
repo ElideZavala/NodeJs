@@ -43,6 +43,11 @@ const userSchema = new mongoose.Schema({
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date, // El restablecimiento caducara despues de un cierto periodo de tiempo.
+  active: {
+    type: Boolean,
+    default: true, // Por defecto esta activo
+    select: false, // No queremos que nadie sepa que esta bandeja esta activa.
+  },
 });
 
 // Middleware pre-save
