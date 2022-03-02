@@ -63,6 +63,8 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
     status: 'success',
     data: null, // Ya no existen los datos.
   });
+
+  next();
 });
 
 // Obtener un Usuario

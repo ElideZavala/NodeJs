@@ -6,6 +6,7 @@ const {
   updateUser,
   deleteUser,
   updateMe,
+  deleteMe,
 } = require('../controllers/userController');
 const {
   signup,
@@ -14,7 +15,6 @@ const {
   resetPassword,
   updatePassword,
   protect,
-  deleteMe,
 } = require('../controllers/authController');
 
 const router = express.Router();
