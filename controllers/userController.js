@@ -2,6 +2,15 @@ const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 
+const filterObj = (obj, ...allowedFields) => {
+  const newObj = {};
+  Object.keys(obj).forEach((el) => {
+    // la llaves los selecionamos como objetos para recorrerla en un matriz.
+    if (allowedFields.includes(el)) newObj[el] = obj[el]; //los elementos que incluya los convertimos en un objeto.
+  });
+  return newObj;
+};
+
 //exportacion de los controlers
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   const users = await User.find(); // Esperamos la consulta para que pueda regresar con todos los documentos.
@@ -26,14 +35,21 @@ exports.updateMe = catchAsync(async (req, res, next) => {
       )
     );
   }
-  // 2) Update user document
-  const updatedUser = await User.findByIdAndUpdate(req.user.id, x, {
+
+  // 2) Filtered out unwanted fields names that are not allowed to be updated //solo los que requerimos.
+  const filterBody = filterObj(req.body, 'name', 'email'); // Del objeto req.body filtramos el nombre y el email
+
+  // 3) Update user document
+  const updatedUser = await User.findByIdAndUpdate(req.user.id, filterBody, {
     new: true,
     runValidators: true,
   });
 
   res.status(200).json({
     status: 'success',
+    data: {
+      user: updatedUser,
+    },
   });
 });
 
