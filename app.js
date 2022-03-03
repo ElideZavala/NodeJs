@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -13,10 +14,15 @@ const app = express();
 // npm i morgan
 
 // 1) GLOBAL MIDDLEWARES
+// Set securuty HTTP headers
+app.use(helmet());
+
+// DEVELOPMENT LOOGING
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev')); // Estado de nuestra peticion.
 }
 
+// Limit request from same API
 const limiter = rateLimit({
   max: 100, // Maximo de solicitudes. // poner limites a las solicitudes de una API..
   windowMs: 60 * 60 * 1000, // Ventana de tiempo en 1hr quiero 100 solicitudes.
@@ -25,12 +31,16 @@ const limiter = rateLimit({
 
 app.use('/api', limiter); //Afectara a todas las rutas que comiencen con esto, limitar a 100 valores.
 
-app.use(express.json());
+// Body parser, reading data from body into req.body
+app.use(express.json({ limit: '10kb' })); // cuando tengamos un cuerpo con mas de 10kb no sera acceptado.
+
+// Serving static  files
 app.use(express.static(`${__dirname}/public`)); // No logramos entrar a las imagenes.
 
+// Test middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString(); // Optenemos la hora Actual.
-  console.log(req.headers);
+  // console.log(req.headers);
   next();
 });
 
