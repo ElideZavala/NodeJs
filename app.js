@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const rateLimit = require('express-rate-limit');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -8,13 +9,21 @@ const userRouter = require('./routes/userRoutes');
 
 const app = express();
 
-// 1) MIDDLEWARES
 // Instalamos morgan.
 // npm i morgan
 
+// 1) GLOBAL MIDDLEWARES
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev')); // Estado de nuestra peticion.
 }
+
+const limiter = rateLimit({
+  max: 100, // Maximo de solicitudes. // poner limites a las solicitudes de una API..
+  windowMs: 60 * 60 * 1000, // Ventana de tiempo en 1hr quiero 100 solicitudes.
+  message: 'Too many request from this IP, please try again in an hour', // Demasiadas solicitudes de esta IP.
+});
+
+app.use('/api', limiter); //Afectara a todas las rutas que comiencen con esto, limitar a 100 valores.
 
 app.use(express.json());
 app.use(express.static(`${__dirname}/public`)); // No logramos entrar a las imagenes.

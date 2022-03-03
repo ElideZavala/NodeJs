@@ -24,12 +24,12 @@ const createSendToken = (user, statusCode, res) => {
 
   if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
 
-  // Remove password from output
-  user.password = undefined;
-
   // Adjuntar el cookie al objeto de respuesta. // we want send the tokes. + Opciones para la cookie.
   //Fragmento de codigo que queremos guardar en nuestro navegador
   res.cookie('jwt', token, cookieOptions);
+
+  // Remove password from output
+  user.password = undefined;
 
   res.status(statusCode).json({
     status: 'success',
