@@ -2,6 +2,8 @@ const express = require('express');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -35,8 +37,10 @@ app.use('/api', limiter); //Afectara a todas las rutas que comiencen con esto, l
 app.use(express.json({ limit: '10kb' })); // cuando tengamos un cuerpo con mas de 10kb no sera acceptado.
 
 // Data sanitization against NoSQL query injection
+app.use(mongoSanitize()); // Mira el cuerpo de la solicitudm cadena de consulta de la solucitud y las  signo de dolar.
 
-// Data satization against XSS
+// Data satization against XSS  // Codigo malicioso a nuestro HTML
+app.use(xss());
 
 // Serving static  files
 app.use(express.static(`${__dirname}/public`)); // No logramos entrar a las imagenes.
