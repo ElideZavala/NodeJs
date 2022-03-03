@@ -34,6 +34,10 @@ app.use('/api', limiter); //Afectara a todas las rutas que comiencen con esto, l
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' })); // cuando tengamos un cuerpo con mas de 10kb no sera acceptado.
 
+// Data sanitization against NoSQL query injection
+
+// Data satization against XSS
+
 // Serving static  files
 app.use(express.static(`${__dirname}/public`)); // No logramos entrar a las imagenes.
 
