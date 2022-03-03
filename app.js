@@ -4,6 +4,7 @@ const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
+const hpp = require('hpp');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -41,6 +42,20 @@ app.use(mongoSanitize()); // Mira el cuerpo de la solicitudm cadena de consulta 
 
 // Data satization against XSS  // Codigo malicioso a nuestro HTML
 app.use(xss());
+
+// Prevent parameter pollution // aclaramos la cadena de consulta.
+app.use(
+  hpp({
+    whitelist: [
+      'duration',
+      'ratingQuantity',
+      'ratingAverage',
+      'maxGroupSize',
+      'difficulty',
+      'price',
+    ],
+  })
+);
 
 // Serving static  files
 app.use(express.static(`${__dirname}/public`)); // No logramos entrar a las imagenes.

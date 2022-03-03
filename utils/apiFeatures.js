@@ -23,7 +23,6 @@ class APIFeatures {
   sort() {
     if (this.queryString.sort) {
       const sortBy = this.queryString.sort.split(',').join('');
-      console.log(sortBy);
       this.query = this.query.sort(sortBy); // Realizamos este tipo de orden "127.0.0.1:3000/api/v1/tours?sort=price"
       // sort('price ratingsAverage'); // Ordenar por dos formas en mongoose
       // Ordenar de mayor a menor 127.0.0.1:3000/api/v1/tours?sort=-price
