@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
-const User = require('./userModel');
+// const User = require('./userModel');
 // const validator = require('validator');
 
 const tourSchema = new mongoose.Schema(
@@ -104,7 +104,12 @@ const tourSchema = new mongoose.Schema(
         day: Number, // Dia del Tour en que la gente acudira a este lugar.
       },
     ],
-    guides: Array,
+    guides: [
+      {
+        type: mongoose.Schema.ObjectId, // Esperamos que los elementos de la matriz de guias sea un ID de MongoDB.
+        ref: 'User', // Hacemos referencia a nuestro modelo de User en MongoDB, sin necesidad de importarlo.
+      },
+    ],
   },
   {
     toJSON: { virtuals: true }, // Los JSON se genera virualmente .
@@ -123,12 +128,12 @@ tourSchema.pre('save', function (next) {
   next();
 });
 
-tourSchema.pre('save', async function (next) {
-  const guidesPromises = this.guides.map(async (id) => await User.findById(id)); // mapeo de los valores y buscando al usuarion con el Id proporcionado.
-  this.guides = await Promise.all(guidesPromises); // Vamos a esperar a todos los usuarios vallen apareciendo.
+// tourSchema.pre('save', async function (next) {
+//   const guidesPromises = this.guides.map(async (id) => await User.findById(id)); // mapeo de los valores y buscando al usuarion con el Id proporcionado.
+//   this.guides = await Promise.all(guidesPromises); // Vamos a esperar a todos los usuarios vallen apareciendo.
 
-  next();
-});
+//   next();
+// });
 
 // Gancho previo al guardado.
 // tourSchema.pre('save', function (next) {
@@ -149,6 +154,16 @@ tourSchema.pre(/^find/, function (next) {
   this.find({ secretTour: { $ne: true } }); // Encontrar un secretTour que no sea igual a true.( No son secretos)
 
   this.start = Date.now(); // Fecha actual
+  next();
+});
+
+tourSchema.pre(/^find/, function (next) {
+  // Apuntara a la consulta actual.
+  this.populate({
+    path: 'guides',
+    select: '-__v -passwordChangedAt', // Excluimos estos valores del usuario en guides.
+  });
+
   next();
 });
 
