@@ -23,7 +23,7 @@ mongoose
 
 // READ JSON FILE
 const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/tours-simple.json`, 'utf-8') // Leemos el archivo
+  fs.readFileSync(`${__dirname}/tours.json`, 'utf-8') // Leemos el archivo
 );
 
 // IMPORT DATA INTO DB
@@ -48,6 +48,7 @@ const deleteData = async () => {
   process.exit();
 };
 
+// Nuevos datos, perimero eliminamos y luego importamos los nuevos valores.
 if (process.argv[2] === '--import') {
   importData();
 }

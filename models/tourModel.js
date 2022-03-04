@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
+const User = require('./userModel');
 // const validator = require('validator');
 
 const tourSchema = new mongoose.Schema(
@@ -97,8 +98,13 @@ const tourSchema = new mongoose.Schema(
           default: 'Point',
           enum: ['Point'],
         },
+        coordinates: [Number],
+        addres: String,
+        description: String,
+        day: Number, // Dia del Tour en que la gente acudira a este lugar.
       },
     ],
+    guides: Array,
   },
   {
     toJSON: { virtuals: true }, // Los JSON se genera virualmente .
@@ -114,6 +120,13 @@ tourSchema.virtual('durationWeeks').get(function () {
 // El documento se ve en la consola justo antes de guardarlo en la base de datos.
 tourSchema.pre('save', function (next) {
   this.slug = slugify(this.name, { lower: true }); // Convertimos todo a minuscula.
+  next();
+});
+
+tourSchema.pre('save', async function (next) {
+  const guidesPromises = this.guides.map(async (id) => await User.findById(id)); // mapeo de los valores y buscando al usuarion con el Id proporcionado.
+  this.guides = await Promise.all(guidesPromises); // Vamos a esperar a todos los usuarios vallen apareciendo.
+
   next();
 });
 
