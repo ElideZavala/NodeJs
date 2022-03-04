@@ -79,6 +79,26 @@ const tourSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    startLocation: {
+      // GeoJSON
+      type: {
+        type: String,
+        default: 'Point', // Valor determinado seria un punto.
+        emum: ['Point'], // Opciones posibles --Solo una.
+      },
+      coordinates: [Number], // Las cordenadas seran tanto la latiud como la longitud.
+      address: String,
+      description: String,
+    },
+    locations: [
+      {
+        type: {
+          type: String,
+          default: 'Point',
+          enum: ['Point'],
+        },
+      },
+    ],
   },
   {
     toJSON: { virtuals: true }, // Los JSON se genera virualmente .
