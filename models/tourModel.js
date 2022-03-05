@@ -112,7 +112,7 @@ const tourSchema = new mongoose.Schema(
     ],
   },
   {
-    toJSON: { virtuals: true }, // Los JSON se genera virualmente .
+    toJSON: { virtuals: true }, // Los JSON se genera virtualmente .
     toObject: { virtuals: true }, // Los Objetos se generan Igualmente Virtualmente.
   }
 );
