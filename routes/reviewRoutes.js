@@ -9,11 +9,7 @@ const {
 
 const router = express.Router();
 
-router.route('/review').get(getAllReview).post(createReview);
-router
-  .route('/review/:id')
-  .get(getReview)
-  .patch(updateReview)
-  .delete(deleteReview);
+router.route('/').get(getAllReview).post(createReview);
+router.route('/:id').get(getReview).patch(updateReview).delete(deleteReview);
 
 module.exports = router;
