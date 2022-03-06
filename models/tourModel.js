@@ -121,6 +121,14 @@ tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7; // Del tourSchema nos devolvera la duration la cual la dividiremos con los dias de la semana, y sera el valor de durationWeeks.
 });
 
+// Virtual populate Realizar el Schema virtual de review
+tourSchema.virtual('reviews', {
+  ref: 'Review',
+  //Identificamos el campo extranjero y el campo local
+  foreignField: 'tour', // Donde se almacena la referencia al modelo actual.
+  localField: '_id', // El id es como se llama 'tour' en el modelo extranjero, alla se llama tour aqui _Id
+});
+
 // DOCUMENT MIDDLEWARE: run before .save() and .create() .insertMany // Se ejecutara antes del evento real.
 // El documento se ve en la consola justo antes de guardarlo en la base de datos.
 tourSchema.pre('save', function (next) {
