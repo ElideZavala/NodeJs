@@ -3,15 +3,27 @@ const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 
 // Traermos todas la review:
-exports.getAllReview = catchAsync(async (req, res, next) => {
-  const review = await Review.find();
+exports.getAllReviews = catchAsync(async (req, res, next) => {
+  const reviews = await Review.find();
 
   // Respuesta
   res.status(200).json({
     status: 'success',
-    results: review.length,
+    results: reviews.length,
     data: {
-      review,
+      reviews,
+    },
+  });
+});
+
+// Crear una review
+exports.createReview = catchAsync(async (req, res, next) => {
+  const newReview = await Review.create(req.body);
+
+  res.status(201).json({
+    status: 'success',
+    data: {
+      review: newReview,
     },
   });
 });
@@ -28,17 +40,6 @@ exports.getReview = catchAsync(async (req, res, next) => {
     status: 'success',
     data: {
       review,
-    },
-  });
-});
-// Crear una review
-exports.createReview = catchAsync(async (req, res, next) => {
-  const newReview = await Review.create(req.body);
-
-  res.status(201).json({
-    status: 'success',
-    data: {
-      review: newReview,
     },
   });
 });

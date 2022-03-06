@@ -71,7 +71,7 @@ app.use((req, res, next) => {
 // 3) ROUTES // Hemos Importados las Rutas.
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
-app.use('/api/v1/review', reviewRouter);
+app.use('/api/v1/reviews', reviewRouter);
 
 // .all Se ejecuta para todos los verbos{get, post, patch, delete} * Representara que todo esta bien
 app.all('*', (req, res, next) => {

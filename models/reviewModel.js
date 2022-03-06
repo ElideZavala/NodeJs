@@ -35,6 +35,20 @@ const reviewSchema = new mongoose.Schema(
   }
 );
 
+// Vamos sobre todos los que se empiezen find.
+reviewSchema.pre(/^find/, function (next) {
+  // get Query really actual.
+  this.populate({
+    path: 'tour',
+    select: 'name',
+  }).populate({
+    path: 'user',
+    select: 'name', // En este caso solo necesitaremos el Nombre y la Foto.
+  });
+
+  next(); // continuar hacia el siguiente middlewer, de lo contrario se quedara en este.
+});
+
 const Review = mongoose.model('Review', reviewSchema);
 
 module.exports = Review;
