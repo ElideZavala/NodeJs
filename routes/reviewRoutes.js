@@ -5,8 +5,9 @@ const {
   createReview,
   updateReview,
   deleteReview,
-} = require('./../controllers/reviewController');
-const { protect, restrictTo } = require('./../controllers/authController');
+} = require('../controllers/reviewController');
+
+const { protect, restrictTo } = require('../controllers/authController');
 
 const router = express.Router();
 

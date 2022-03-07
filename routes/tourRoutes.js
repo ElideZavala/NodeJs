@@ -9,8 +9,8 @@ const {
   updateTour,
   deleteTour,
 } = require('../controllers/tourController');
-
 const { protect, restrictTo } = require('../controllers/authController');
+const { createReview } = require('../controllers/reviewController');
 
 const router = express.Router();
 
@@ -29,5 +29,15 @@ router
   .get(getTour)
   .patch(updateTour)
   .delete(protect, restrictTo('admin', 'lead-guide'), deleteTour); // admin => roles de usuarios autorizados para eliminar el tour.
+
+//POST/ tour/234fad/review <- EstaRuta anidada significa acceder al recurso de reseñas en el recurso del recorrido
+//GET/ tour/234fad/review <- Nos proporcionara todas las reseñas de esta gira.
+//GET/ tour/234fad/review/4564697jf <- Especificar el ID de la revisión. Obtenemos una revisión  con este ID.
+
+router
+  .route('/:tourId/reviews')
+  .post(protect, restrictTo('user'), createReview);
+
+// module.exports = router;
 
 module.exports = router; // Realizamos la exportacion de Router

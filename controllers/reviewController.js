@@ -1,6 +1,6 @@
-const Review = require('./../models/reviewModel');
-const catchAsync = require('./../utils/catchAsync');
-const AppError = require('./../utils/appError');
+const Review = require('../models/reviewModel');
+const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 
 // Traermos todas la review:
 exports.getAllReviews = catchAsync(async (req, res, next) => {
@@ -16,8 +16,11 @@ exports.getAllReviews = catchAsync(async (req, res, next) => {
   });
 });
 
-// Crear una review
 exports.createReview = catchAsync(async (req, res, next) => {
+  // Allow nested routes.
+  if (!req.body.tour) req.body.tour = req.params.tourId; // Si no hay usuario en el cuerpo establecer la del params.
+  if (!req.body.user) req.body.user = req.user.id; // si no usuario en el cuerpo, llenar con el user.id.
+
   const newReview = await Review.create(req.body);
 
   res.status(201).json({
