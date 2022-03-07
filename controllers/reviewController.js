@@ -51,17 +51,8 @@ exports.getReview = catchAsync(async (req, res, next) => {
   });
 });
 
-// Actualizar la review
-exports.updateReview = catchAsync(async (req, res, next) => {
-  const review = await Review.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
+// Update to review
+exports.updateReview = factory.updateOne(Review);
 
-  if (!review) {
-    return next(new AppError('No review found with that ID', 404));
-  }
-});
-
-// Delete a review
+// Delete to review
 exports.deleteReview = factory.deleteOne(Review);
