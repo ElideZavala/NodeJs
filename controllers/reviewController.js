@@ -4,7 +4,10 @@ const AppError = require('../utils/appError');
 
 // Traermos todas la review:
 exports.getAllReviews = catchAsync(async (req, res, next) => {
-  const reviews = await Review.find();
+  let filter = {};
+  if (req.params.tourId) filter = { tour: req.params.tourId }; // Si hay un tour este filtro debe ser igual a tour.
+
+  const reviews = await Review.find(filter); // Buscaremos todas las reseñas de este Id tour.
 
   // Respuesta
   res.status(200).json({
