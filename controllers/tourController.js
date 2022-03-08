@@ -1,8 +1,7 @@
 const Tour = require('../models/tourModel');
-const APIFeatures = require('../utils/apiFeatures');
 const catchAsync = require('../utils/catchAsync');
-const AppError = require('../utils/appError');
 const factory = require('./handlerFactory');
+// const AppError = require('../utils/appError');
 
 exports.aliasTopTours = (req, res, next) => {
   req.query.limit = '5';
@@ -11,34 +10,14 @@ exports.aliasTopTours = (req, res, next) => {
   next();
 };
 
-exports.getAllTours = catchAsync(async (req, res, next) => {
-  // EXECUTE QUERY
-  const features = new APIFeatures(Tour.find(), req.query) //analizamos un objeto de consulta y la cadena de consulta que proviene de express.
-    .filter()
-    .sort()
-    .limitFields()
-    .paginate();
-  const tours = await features.query; // Esperamos la consulta para que pueda regresar con todos los documentos.
-
-  // SEND RESPONSE
-  res.status(200).json({
-    status: 'success',
-    results: tours.length,
-    data: {
-      tours,
-    },
-  });
-});
-
+// Get All Tour
+exports.getAllTours = factory.getAll(Tour);
 // Get Tour.
 exports.getTour = factory.getOne(Tour, { path: 'reviews' }); // Propiedad de la ruta sera reviews y select el cual especificamos cual de los campos queremos obtener, en dado casos.
-
 // Create Tour.
 exports.createTour = factory.createOne(Tour);
-
 // Actualiza Tour.
 exports.updateTour = factory.updateOne(Tour);
-
 // Delete Tour.
 exports.deleteTour = factory.deleteOne(Tour);
 

@@ -1,5 +1,6 @@
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const APIFeatures = require('../utils/apiFeatures');
 
 exports.deleteOne = (Model) =>
   catchAsync(async (req, res, next) => {
@@ -59,6 +60,30 @@ exports.getOne = (Model, popOptions) =>
 
     res.status(200).json({
       status: 'success',
+      data: {
+        data: doc,
+      },
+    });
+  });
+
+exports.getAll = (Model) =>
+  catchAsync(async (req, res, next) => {
+    // To allow for nested GET reviews on tour (hack)
+    let filter = {};
+    if (req.params.tourId) filter = { tour: req.params.tourId }; // Si hay un tour este filtro debe ser igual a tour.
+
+    // EXECUTE QUERY
+    const features = new APIFeatures(Model.find(filter), req.query) //analizamos un objeto de consulta y la cadena de consulta que proviene de express.
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
+    const doc = await features.query; // Esperamos la consulta para que pueda regresar con todos los documentos.
+
+    // SEND RESPONSE
+    res.status(200).json({
+      status: 'success',
+      results: doc.length,
       data: {
         data: doc,
       },

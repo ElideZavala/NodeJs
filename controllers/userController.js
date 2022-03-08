@@ -1,6 +1,6 @@
-const User = require('./../models/userModel');
-const catchAsync = require('./../utils/catchAsync');
-const AppError = require('./../utils/appError');
+const User = require('../models/userModel');
+const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 const factory = require('./handlerFactory');
 
 const filterObj = (obj, ...allowedFields) => {
@@ -11,20 +11,6 @@ const filterObj = (obj, ...allowedFields) => {
   });
   return newObj;
 };
-
-//exportacion de los controlers
-exports.getAllUsers = catchAsync(async (req, res, next) => {
-  const users = await User.find(); // Esperamos la consulta para que pueda regresar con todos los documentos.
-
-  // SEND RESPONSE
-  res.status(200).json({
-    status: 'success',
-    results: users.length,
-    data: {
-      users,
-    },
-  });
-});
 
 exports.updateMe = catchAsync(async (req, res, next) => {
   // 1) Create error if user POSTs password data
@@ -68,24 +54,19 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   next();
 });
 
-// Obtener un Usuario
-exports.getUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined',
-  });
-};
-
 // Crear un Usuario
 exports.createUser = (req, res) => {
   res.status(500).json({
     status: 'error',
-    message: 'This route is not yet defined',
+    message: 'This route is not yet defined! Please use /signup instead',
   });
 };
 
+// Get All Users
+exports.getAllUsers = factory.getAll(User);
+// Obtener un Usuario
+exports.getUser = factory.getOne(User);
 // Actualizamos al Usuario. Do NOT update with this!
 exports.updateUser = factory.updateOne(User);
-
 // Eliminar al Usuario.
 exports.deleteUser = factory.deleteOne(User);
