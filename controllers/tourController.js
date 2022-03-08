@@ -30,41 +30,16 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getTour = catchAsync(async (req, res, next) => {
-  const tour = await Tour.findById(req.params.id).populate('reviews'); // Nombre del campo que queremos completar, para poblar.
-  // Tour.findOne({_id: req.params.id})
+// Get Tour.
+exports.getTour = factory.getOne(Tour, { path: 'reviews' }); // Propiedad de la ruta sera reviews y select el cual especificamos cual de los campos queremos obtener, en dado casos.
 
-  // Si encontranos el tour, creanos una nueva estancia.
-  if (!tour) {
-    return next(new AppError('No tour found with that ID', 404)); // return para parar y ni pasar al sig codigo.
-  }
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      tour,
-    },
-  });
-});
-
-// exports.createTour = catchAsync(async (req, res, next) => {
-//   const newTour = await Tour.create(req.body);
-
-//   res.status(201).json({
-//     status: 'success',
-//     data: {
-//       tour: newTour,
-//     },
-//   });
-// });
-
-// Create Tour
+// Create Tour.
 exports.createTour = factory.createOne(Tour);
 
-// Actualiza Tour
+// Actualiza Tour.
 exports.updateTour = factory.updateOne(Tour);
 
-// Delete Tour
+// Delete Tour.
 exports.deleteTour = factory.deleteOne(Tour);
 
 exports.getTourStats = catchAsync(async (req, res, next) => {

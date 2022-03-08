@@ -45,3 +45,22 @@ exports.createOne = (Model) =>
       },
     });
   });
+
+exports.getOne = (Model, popOptions) =>
+  catchAsync(async (req, res, next) => {
+    let query = Model.findById(req.params.id); // query sera el valor de la busqueda por el id.
+    if (popOptions) query = query.populate(popOptions); // Si hay un objeto de obsiones de rellenar
+    const doc = await query; // la busqueda mas el campo que queremos poblar en dado caso que exista,
+
+    // Si encontranos el doc, creanos una nueva estancia.
+    if (!doc) {
+      return next(new AppError('No document found with that ID', 404)); // return para parar y ni pasar al sig codigo.
+    }
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        data: doc,
+      },
+    });
+  });
