@@ -2,6 +2,7 @@ const express = require('express');
 const {
   getAllUsers,
   createUser,
+  getMe,
   getUser,
   updateUser,
   deleteUser,
@@ -25,8 +26,9 @@ router.post('/forgotPassword', forgotPassword);
 
 router.patch('/resetPassword/:token', resetPassword);
 router.patch('/updateMyPassword', updatePassword);
-router.patch('/updateMe', protect, updateMe);
 
+router.get('/me', protect, getMe, getUser);
+router.patch('/updateMe', protect, updateMe);
 router.delete('/deleteMe', protect, deleteMe);
 
 // Router FILOSOFIA REST.
