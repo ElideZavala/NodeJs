@@ -15,10 +15,13 @@ const router = express.Router({ mergeParams: true }); // Cada enrutador solo tie
 // Todas la rutas terminaran bdirigidas
 //GET /tour/234fad/review
 //POST /reviews62225ba17e3dd4104ce34a7c
+
+router.use(protect); // Nadie podra acceder a menos que este autentificado.
+
 router
   .route('/')
   .get(getAllReviews)
-  .post(protect, restrictTo('user'), setTourUserIds, createReview);
+  .post(restrictTo('user'), setTourUserIds, createReview);
 
 router.route('/:id').get(getReview).patch(updateReview).delete(deleteReview);
 
