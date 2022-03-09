@@ -23,6 +23,11 @@ router
   .get(getAllReviews)
   .post(restrictTo('user'), setTourUserIds, createReview);
 
-router.route('/:id').get(getReview).patch(updateReview).delete(deleteReview);
+router
+  .route('/:id')
+  .get(getReview)
+  // Solo los usuarios podran modificar los siguientes middlewere
+  .patch(restrictTo('user', 'admin'), updateReview)
+  .delete(restrictTo('user', 'admin'), deleteReview);
 
 module.exports = router;
