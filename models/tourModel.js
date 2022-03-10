@@ -119,6 +119,7 @@ const tourSchema = new mongoose.Schema(
 
 // tourSchema.index({ price: 1 }); // Establecemos el indice de modo ascendente, cuado es negativo(-1), seria de manera desendente.
 tourSchema.index({ price: 1, ratingsAverage: -1 }); // Establecemos el indice de modo ascendente, cuado es negativo(-1), seria de manera desendente.
+tourSchema.index({ slug: 1 });
 
 tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7; // Del tourSchema nos devolvera la duration la cual la dividiremos con los dias de la semana, y sera el valor de durationWeeks.

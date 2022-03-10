@@ -48,6 +48,32 @@ reviewSchema.pre(/^find/, function (next) {
   next(); // continuar hacia el siguiente middlewer, de lo contrario se quedara en este.
 });
 
+reviewSchema.statics.calcAverageRatings = async function (tourId) {
+  // Canalizacion de agregacion apuntando al modelo actual
+  console.log(tourId);
+  const stats = await this.aggregate([
+    {
+      $match: { tour: tourId },
+    },
+    // {
+    //   $group: {
+    //     _id: '$tour', // Agrupamos por recorridos.
+    //     nRating: { $sum: 1 }, // Contara los recorridos realizados, si hay 5 documentos contara 5.
+    //     avgRating: { $avg: '$rating' }, // Calculamos el promedio de rating
+    //   },
+    // },
+  ]);
+  console.log(stats);
+};
+
+// post es despues de la app, ya que todos los documentos estaran guardados.
+reviewSchema.post('save', function (next) {
+  // this point to current review
+  // El constructor es basicamente el modelo que creo ese documento, representado la gira.
+  this.constructor.calcAverageRatings(this.tour);
+  next();
+});
+
 const Review = mongoose.model('Review', reviewSchema);
 
 module.exports = Review;
