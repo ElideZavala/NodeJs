@@ -1,5 +1,6 @@
 // review / rating / createAt / ref yo tour / ref to user
 const mongoose = require('mongoose');
+const Tour = require('./tourModel');
 
 const reviewSchema = new mongoose.Schema(
   {
@@ -48,30 +49,35 @@ reviewSchema.pre(/^find/, function (next) {
   next(); // continuar hacia el siguiente middlewer, de lo contrario se quedara en este.
 });
 
+// Realizamos el promedio de las calificaciones que vamos dando. // Metodo Estatico.
 reviewSchema.statics.calcAverageRatings = async function (tourId) {
   // Canalizacion de agregacion apuntando al modelo actual
-  console.log(tourId);
   const stats = await this.aggregate([
     {
       $match: { tour: tourId },
     },
-    // {
-    //   $group: {
-    //     _id: '$tour', // Agrupamos por recorridos.
-    //     nRating: { $sum: 1 }, // Contara los recorridos realizados, si hay 5 documentos contara 5.
-    //     avgRating: { $avg: '$rating' }, // Calculamos el promedio de rating
-    //   },
-    // },
+    {
+      $group: {
+        _id: '$tour', // Agrupamos por recorridos.
+        nRating: { $sum: 1 }, // Contara los recorridos realizados, si hay 5 documentos contara 5.
+        avgRating: { $avg: '$rating' }, // Calculamos el promedio de rating
+      },
+    },
   ]);
   console.log(stats);
+
+  // Actualizamos todos los valores de nuestra BD de Tours.
+  await Tour.findByIdAndUpdate(tourId, {
+    ratingsQuantity: stats[0].nRating,
+    ratingsAverage: stats[0].avgRating,
+  });
 };
 
-// post es despues de la app, ya que todos los documentos estaran guardados.
-reviewSchema.post('save', function (next) {
+// post es despues de la app, ya que todos los documentos estaran guardados, No contiene next.
+reviewSchema.post('save', function () {
   // this point to current review
   // El constructor es basicamente el modelo que creo ese documento, representado la gira.
   this.constructor.calcAverageRatings(this.tour);
-  next();
 });
 
 const Review = mongoose.model('Review', reviewSchema);
