@@ -24,15 +24,15 @@ exports.deleteTour = factory.deleteOne(Tour);
 exports.getTourStats = catchAsync(async (req, res, next) => {
   const stats = await Tour.aggregate([
     {
-      $match: { ratingAverage: { $gte: 4.5 } }, // coincidir elementos con rangos mayor a un promedio de 4.5.
+      $match: { ratingsAverage: { $gte: 4.5 } }, // coincidir elementos con rangos mayor a un promedio de 4.5.
     },
     {
       // Objetos dentro de objetos, llamado grupo
       $group: {
         _id: { $toUpper: '$difficulty' }, //  Especificar por alguna otra caracteristica.// se vera en MAYUSCULA
         numTours: { $sum: 1 }, // sumaremos el numero total de documentos.
-        numRatings: { $sum: '$ratingAverage' }, //suma de las calificaciones
-        avgRating: { $avg: '$ratingQuantity' }, // Calcularemos el promedio de los promedios.
+        numRatings: { $sum: '$ratingsAverage ' }, //suma de las calificaciones
+        avgRating: { $avg: '$ratingsQuantity' }, // Calcularemos el promedio de los promedios.
         avgPrice: { $avg: '$price' }, // Calculamos el prommedio de los precion.
         minPrime: { $min: '$price' }, // Calculamos el precio mas bajo.
         maxPrime: { $max: '$price' }, // Calculamos el precio mas alto.

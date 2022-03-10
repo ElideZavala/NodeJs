@@ -31,13 +31,13 @@ const tourSchema = new mongoose.Schema(
         message: 'Difficulty is either: easy, medium, difficulty', // msg de error si colocamos otra que no es.
       },
     },
-    ratingAverage: {
+    ratingsAverage: {
       type: Number,
       default: 4.5, // Numero por defecto en caso de que no tenga ninguno
       min: [1, 'Rating must be above 1.0'],
       max: [5, 'Rating must be below 5.0'], // Rango, comentario del error.
     },
-    ratingQuantity: {
+    ratingsQuantity: {
       type: Number,
       default: 0, // Numero por defecto en caso de que no tenga ninguno
     },
@@ -116,6 +116,9 @@ const tourSchema = new mongoose.Schema(
     toObject: { virtuals: true }, // Los Objetos se generan Igualmente Virtualmente.
   }
 );
+
+// tourSchema.index({ price: 1 }); // Establecemos el indice de modo ascendente, cuado es negativo(-1), seria de manera desendente.
+tourSchema.index({ price: 1, ratingsAverage: -1 }); // Establecemos el indice de modo ascendente, cuado es negativo(-1), seria de manera desendente.
 
 tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7; // Del tourSchema nos devolvera la duration la cual la dividiremos con los dias de la semana, y sera el valor de durationWeeks.
