@@ -80,6 +80,22 @@ reviewSchema.post('save', function () {
   this.constructor.calcAverageRatings(this.tour);
 });
 
+// findByIdAndUpdate
+// findByIdAndDelete
+reviewSchema.pre(/^findOneAnd/, async function (next) {
+  this.revizar = await this.findOne();
+  console.log(this.revizar);
+  next();
+});
+
+// Despues de que la consulta se haya finalizado y la revision actualizado, podemos llamar calcAverageRatings
+reviewSchema.post(/^findOneAnd/, async function () {
+  // await this.findOne(); <-- does NOT work here, query has already executed.
+  await this.revizar.constructor.calcAverageRatings(this.revizar.tour);
+});
+
+// Pasar datos del middleware previo al middleware posterior.
+
 const Review = mongoose.model('Review', reviewSchema);
 
 module.exports = Review;
