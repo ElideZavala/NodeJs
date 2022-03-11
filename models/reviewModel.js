@@ -64,13 +64,21 @@ reviewSchema.statics.calcAverageRatings = async function (tourId) {
       },
     },
   ]);
-  console.log(stats);
+  // console.log(stats);
 
-  // Actualizamos todos los valores de nuestra BD de Tours.
-  await Tour.findByIdAndUpdate(tourId, {
-    ratingsQuantity: stats[0].nRating,
-    ratingsAverage: stats[0].avgRating,
-  });
+  if (stats.length > 0) {
+    // Actualizamos todos los valores de nuestra BD de Tours.
+    await Tour.findByIdAndUpdate(tourId, {
+      ratingsQuantity: stats[0].nRating,
+      ratingsAverage: stats[0].avgRating,
+    });
+    // En caso de que no existan resultados regresamos valores predeterminados.
+  } else {
+    await Tour.findByIdAndUpdate(tourId, {
+      ratingsQuantity: 0,
+      ratingsAverage: 4.5,
+    });
+  }
 };
 
 // post es despues de la app, ya que todos los documentos estaran guardados, No contiene next.
@@ -80,11 +88,12 @@ reviewSchema.post('save', function () {
   this.constructor.calcAverageRatings(this.tour);
 });
 
+// <=== Actualizar para un solo recorrido.
 // findByIdAndUpdate
 // findByIdAndDelete
 reviewSchema.pre(/^findOneAnd/, async function (next) {
   this.revizar = await this.findOne();
-  console.log(this.revizar);
+  // console.log(this.revizar);
   next();
 });
 
