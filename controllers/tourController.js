@@ -120,17 +120,18 @@ exports.getToursWithin = catchAsync(async (req, res, next) => {
     );
   }
 
-  // $geoWithin -> Operador matematico de localizacion. // Primero colocamos la longitud y luego la latitud.
-  // centerShpere de esfera. 
+  // $geoWithin -> Operador matematico de localizacion, encuentra documentos dentro de una determinada geometria.
+  // Primero colocamos la longitud y luego la latitud.
+  // centerShpere de esfera.
   const tours = await Tour.find({
-    startLocation: { $geoWithin: { $centerShpere: [[lng, lat, radius]] } },
+    startLocation: { $geoWithin: { $centerSphere: [[lng, lat], radius] } },
   });
 
   console.log(distance, lat, lng, unit);
 
   res.status(200).json({
     status: 'success',
-    results: ''
+    results: tours.length,
     data: {
       data: tours,
     },
