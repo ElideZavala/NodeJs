@@ -36,6 +36,7 @@ const tourSchema = new mongoose.Schema(
       default: 4.5, // Numero por defecto en caso de que no tenga ninguno
       min: [1, 'Rating must be above 1.0'],
       max: [5, 'Rating must be below 5.0'], // Rango, comentario del error.
+      set: (val) => Math.round(val * 10) / 10, // Se ejecuta cada que se establece un nuevo valor a este campo.
     },
     ratingsQuantity: {
       type: Number,

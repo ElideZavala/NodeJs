@@ -8,6 +8,7 @@ const {
   getTour,
   updateTour,
   deleteTour,
+  getToursWithin,
 } = require('../controllers/tourController');
 const { protect, restrictTo } = require('../controllers/authController');
 // const { createReview } = require('../controllers/reviewController');
@@ -27,6 +28,14 @@ router.use('/:tourId/reviews', reviewRouter); // Para esta ruta especifica quere
 router.route('/top-5-cheap').get(aliasTopTours, getAllTours);
 
 router.route('/tour-stats').get(getTourStats);
+
+// distancia/ centro/ longitud y latitud/ unidad de barra/ parametro de consultas.
+// tours-within?distance=233&center=-40,45&unit=mi
+// tour-within/233/center/-40,45/unit/mi
+router.route(
+  '/tours-within/:distance/center/:lating/unit/:unit',
+  getToursWithin
+);
 
 router
   .route('/monthly-plan/:year')
