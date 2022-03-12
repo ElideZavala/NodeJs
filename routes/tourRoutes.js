@@ -32,11 +32,9 @@ router.route('/tour-stats').get(getTourStats);
 // distancia/ centro/ longitud y latitud/ unidad de barra/ parametro de consultas.
 // tours-within?distance=233&center=-40,45&unit=mi
 // tour-within/233/center/-40,45/unit/mi
-router.route(
-  '/tours-within/:distance/center/:lating/unit/:unit',
-  getToursWithin
-);
-
+router
+  .route('/tours-within/:distance/center/:latlng/unit/:unit')
+  .get(getToursWithin);
 router
   .route('/monthly-plan/:year')
   .get(protect, restrictTo('admin', 'lead-guide', 'guide'), getMonthlyPlan);

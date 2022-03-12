@@ -104,9 +104,12 @@ exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
 // tours-within?distance=233&center=-40,45&unit=mi
 // tour-within/233/center/33.92671721939491, -118.02108560974635,/unit/mi
 
-exports.getToursWithin = (req, res, next) => {
-  const { distance, center, unit } = req.params;
+exports.getToursWithin = catchAsync(async (req, res, next) => {
+  const { distance, latlng, unit } = req.params;
   const [lat, lng] = latlng.split(','); // lo dividimos por coma.
+
+  // Los radiales se optinen por medir la distancia por el radio de la tierra.
+  const radius = unit === 'mi' ? distance / 3963.2 : distance / 6378.1; // convertir a millas y si no lo es a Km.
 
   if (!lat || !lng) {
     next(
@@ -117,9 +120,19 @@ exports.getToursWithin = (req, res, next) => {
     );
   }
 
+  // $geoWithin -> Operador matematico de localizacion. // Primero colocamos la longitud y luego la latitud.
+  // centerShpere de esfera. 
+  const tours = await Tour.find({
+    startLocation: { $geoWithin: { $centerShpere: [[lng, lat, radius]] } },
+  });
+
   console.log(distance, lat, lng, unit);
 
   res.status(200).json({
     status: 'success',
+    results: ''
+    data: {
+      data: tours,
+    },
   });
-};
+});
