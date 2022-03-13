@@ -1,3 +1,4 @@
+const path = require('path'); // Nos permite modificar la rutas de nuestros directorios.
 const express = require('express');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
@@ -17,7 +18,14 @@ const app = express();
 // Instalamos morgan.
 // npm i morgan
 
+// Configuramos nuestro motor PUG
+app.set('view engine', 'pug'); // Motor de plantilla PUG.
+app.set('views', path.join(__dirname, 'views')); // Configuración de vista. // evita error si falta barra oblicua..
+
 // 1) GLOBAL MIDDLEWARES
+// Serving static  files
+app.use(express.static(path.join(__dirname, 'public'))); // Por si nos falla la barra "/"
+
 // Set securuty HTTP headers
 app.use(helmet());
 
@@ -57,9 +65,6 @@ app.use(
     ],
   })
 );
-
-// Serving static  files
-app.use(express.static(`${__dirname}/public`)); // No logramos entrar a las imagenes.
 
 // Test middleware
 app.use((req, res, next) => {
