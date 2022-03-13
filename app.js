@@ -74,6 +74,11 @@ app.use((req, res, next) => {
 });
 
 // 3) ROUTES // Hemos Importados las Rutas.
+app.get('/', (req, res) => {
+  res.status(200).render('base'); // render renderizará la plantilla pug
+  // Express buscara este archivo dentro de la carpeta que se especifico al principio.
+});
+
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
