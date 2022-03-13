@@ -9,6 +9,7 @@ const {
   updateTour,
   deleteTour,
   getToursWithin,
+  getDistances,
 } = require('../controllers/tourController');
 const { protect, restrictTo } = require('../controllers/authController');
 // const { createReview } = require('../controllers/reviewController');
@@ -38,6 +39,8 @@ router
 router
   .route('/monthly-plan/:year')
   .get(protect, restrictTo('admin', 'lead-guide', 'guide'), getMonthlyPlan);
+
+router.route('/distances/:latlng/unit/:unit').get(getDistances);
 
 router
   .route('/')

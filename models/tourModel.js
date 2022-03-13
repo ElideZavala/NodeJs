@@ -122,7 +122,7 @@ const tourSchema = new mongoose.Schema(
 tourSchema.index({ price: 1, ratingsAverage: -1 }); // Establecemos el indice de modo ascendente, cuado es negativo(-1), seria de manera desendente.
 tourSchema.index({ slug: 1 });
 // Estamos indicando que esta ubicacion de inicio deberia indexarse a una esfera 2D.
-tourSchema.index({ startLocation: '2dsphere' }); // Puntos reales en 2d.
+tourSchema.index({ startLocation: '2dsphere' }); // Puntos reales en 2d esferas// Ubicacion de Inicio.
 
 tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7; // Del tourSchema nos devolvera la duration la cual la dividiremos con los dias de la semana, y sera el valor de durationWeeks.
@@ -188,12 +188,12 @@ tourSchema.post(/^find/, function (docs, next) {
 });
 
 // AGGREGATION MIDDLEWARE // Canalizacion de nuesto esquema formado en getTourStats con Tour.aggregate
-tourSchema.pre('aggregate', function (next) {
-  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } }); // Agregamos elementos a nuestro pipeline()
-  // los cuales son los secretTour que no sean true, eliminando los otros.
-  console.log(this.pipeline()); // con this ejecutamos un aggregate y
-  next();
-});
+// tourSchema.pre('aggregate', function (next) {
+//   this.pipeline().unshift({ $match: { secretTour: { $ne: true } } }); // Agregamos elementos a nuestro pipeline()
+//   // los cuales son los secretTour que no sean true, eliminando los otros.
+//   console.log(this.pipeline()); // con this ejecutamos un aggregate y
+//   next();
+// });
 
 const Tour = mongoose.model('Tour', tourSchema);
 

@@ -137,3 +137,49 @@ exports.getToursWithin = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.getDistances = catchAsync(async (req, res, next) => {
+  // ('/distances/:latlng/unit/:unit'
+  const { latlng, unit } = req.params;
+  const [lat, lng] = latlng.split(','); // lo dividimos por coma.
+
+  const multiplier = unit === 'mi' ? 0.000621371192237 : 0.001;
+
+  // Mostrar Error si no tenemos una longitud y una latitud.
+  if (!lat || !lng) {
+    next(
+      new AppError(
+        'Please provide latitut and longitude in the format lat, lng.',
+        400
+      )
+    );
+  }
+
+  // Agregamos nuevos elementos geoespaciales a nuestro Tour.
+  const distances = await Tour.aggregate([
+    {
+      $geoNear: {
+        near: {
+          type: 'Point',
+          coordinates: [lng * 1, lat * 1], // Lo multiplicamos por uno para obtener un numero.
+        },
+        distanceField: 'distance', // Donde se almacenaran todas las distancias calculadas.
+        distanceMultiplier: multiplier, // multiplicara pra una conversion en Km o Millas.
+      },
+    },
+    {
+      $project: {
+        // Projectamos la distancia y el nombre del Tour.
+        distance: 1, // de menor a mayor.
+        name: 1,
+      },
+    },
+  ]);
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      data: distances,
+    },
+  });
+});
