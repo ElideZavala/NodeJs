@@ -10,19 +10,11 @@ html(lang="en")
         link(rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,300i,700")
     body 
         // HEADER
-        header.headrer
-            nav.nav.nav--tours
-                a.nav__el(href='#') All tours 
-                form.nav__search
-            .header__logo
-                img(src='img/log-white.png' alt='Natours logo')
-            nav.nav.nav--user
-                //- a.nav-el(href="#") My bookings
-                //- a.nav-el(href="#")    
-                //-     img.nav__user-img(src="", alt="")(src="img/user.jpg" alt="User photo")
-                //-     span Elide
-                button.nav__el Log in    
-                button.nav__el.nav__el--cta Sign up  
+        include _header
 
         // CONTENT
-        
+        section.overview 
+            h1= tour 
+
+        // FOOTER
+        include _footer
