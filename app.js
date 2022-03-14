@@ -25,6 +25,7 @@ app.set('views', path.join(__dirname, 'views')); // Configuración de vista. // 
 // 1) GLOBAL MIDDLEWARES
 // Serving static  files
 app.use(express.static(path.join(__dirname, 'public'))); // Por si nos falla la barra "/"
+// Todos los archivos estaticos se serviran automaticamente desde una carpeta llamada pública
 
 // Set securuty HTTP headers
 app.use(helmet());
@@ -75,7 +76,10 @@ app.use((req, res, next) => {
 
 // 3) ROUTES // Hemos Importados las Rutas.
 app.get('/', (req, res) => {
-  res.status(200).render('base'); // render renderizará la plantilla pug
+  res.status(200).render('base', {
+    tour: 'The Forest Hiker',
+    user: 'Jonas',
+  }); // render renderizará la plantilla pug
   // Express buscara este archivo dentro de la carpeta que se especifico al principio.
 });
 
