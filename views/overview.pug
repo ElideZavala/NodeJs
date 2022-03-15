@@ -25,7 +25,7 @@ block content
 						.card__data
 							svg.card__icon
 								use(xlink:href='img/icons.svg#icon-calendar')
-							span= tour.startDates[0]
+							span= tour.startDates[0].toLocaleString('en-us', {month: 'long', year: 'numeric'})
 						.card__data
 							svg.card__icon
 								use(xlink:href='img/icons.svg#icon-flag')       
@@ -36,10 +36,12 @@ block content
 							span= `${tour.maxGroupSize} people`
 
 						.card__footer
-						p
-							span.card__footer-value $297
-							span.card__footer-text per person
-						p.card__ratings
-							span.card__footer-value 4.9
-							span.card__footer-text rating (21)
-						a.btn.btn--green.btn--small(href='#') Details
+							p
+								span.card__footer-value= `$${tour.price} `
+								|
+								span.card__footer-text per person
+							p.card__ratings
+								span.card__footer-value= tour.ratingsAverage
+								|
+								span.card__footer-text= ` rating (${tour.ratingsQuantity})`
+							a.btn.btn--green.btn--small(href=`/tours/${tour.slug}`) Details
