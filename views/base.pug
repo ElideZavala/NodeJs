@@ -1,21 +1,23 @@
 doctype html 
 html(lang="en")
-    head
-        title Natours | #{title}
-        meta(charset="UTF-8")
-        meta(http-equiv="X-UA-Compatible", content="IE=edge")
-        meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        link(rel='stylesheet' href='/css/style.css')
-        link(rel='shortcut icon' type='/image/png' href='/img/favicon.png')
-        link(rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,300i,700")
-    body 
-        // HEADER
-        include _header
+	head
+		block head 
+			title Natours | #{title}
+			meta(charset="UTF-8")
+			meta(http-equiv="X-UA-Compatible", content="IE=edge")
+			meta(name="viewport", content="width=device-width, initial-scale=1.0")
+			link(rel='stylesheet' href='/css/style.css')
+			link(rel='shortcut icon' type='/image/png' href='/img/favicon.png')
+			link(rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,300i,700")
+			
+	body 
+		// HEADER
+		include _header
 
-        // CONTENT
-        //- Colocaremos la continuacion en el archivo overview.pug
-        block content 
-        
+		// CONTENT
+		//- Colocaremos la continuacion en el archivo overview.pug
+		block content 
 
-        // FOOTER
-        include _footer
+
+		// FOOTER
+		include _footer

@@ -1,7 +1,9 @@
 extends base
 include _reviewCard
-
-
+//- Todo lo que esscribamos en este bloque se agregara a lo que ya esta ene ese bloque.
+block append head 
+	script(src='/js/mapbox.js') 
+//- Inyectamos esta linea de codigo, en el bloque pincipal que ya esta en nuestra plantilla base.
 mixin overviewBox(label, text, icon)
 	.overview-box__detail
 		svg.overview-box__icon
