@@ -1,0 +1,78 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Users\hp\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add mapxbox-gl
+
+PATH: 
+  C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Calibre2\;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\DockerDesktop\version-bin;C:\Program Files\MongoDB\Server\4.0\bin;C:\Users\hp\AppData\Local\Microsoft\WindowsApps;C:\Users\hp\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\hp\AppData\Roaming\npm
+
+Yarn version: 
+  1.22.17
+
+Node version: 
+  14.16.1
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/mapxbox-gl: Not found
+      at Request.params.callback [as _callback] (C:\Users\hp\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:67029:18)
+      at Request.self.callback (C:\Users\hp\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:140883:22)
+      at Request.emit (events.js:315:20)
+      at Request.<anonymous> (C:\Users\hp\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:141855:10)
+      at Request.emit (events.js:315:20)
+      at IncomingMessage.<anonymous> (C:\Users\hp\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:141777:12)
+      at Object.onceWrapper (events.js:421:28)
+      at IncomingMessage.emit (events.js:327:22)
+      at endReadableNT (internal/streams/readable.js:1327:12)
+      at processTicksAndRejections (internal/process/task_queues.js:80:21)
+
+npm manifest: 
+  {
+    "name": "notours",
+    "version": "1.0.0",
+    "description": "Learning node, express and mongoDB",
+    "main": "app.js",
+    "scripts": {
+      "start": "nodemon server.js",
+      "start:prod": "set NODE_ENV=production&& nodemon server.js",
+      "debug": "ndb server.js"
+    },
+    "author": "Elide Zavala Vinagre",
+    "license": "ISC",
+    "dependencies": {
+      "bcryptjs": "^2.4.3",
+      "dotenv": "^16.0.0",
+      "express": "^4.17.2",
+      "express-mongo-sanitize": "^2.2.0",
+      "express-rate-limit": "^6.3.0",
+      "helmet": "^3.23.3",
+      "hpp": "^0.2.3",
+      "jsonwebtoken": "^8.5.1",
+      "mongoose": "^5.13.14",
+      "morgan": "^1.10.0",
+      "ndb": "^1.1.5",
+      "nodemailer": "^4.7.0",
+      "nodemon": "^2.0.15",
+      "pug": "^3.0.2",
+      "slugify": "^1.6.5",
+      "validator": "^13.7.0",
+      "xss-clean": "^0.1.1"
+    },
+    "devDependencies": {
+      "eslint": "^8.8.0",
+      "eslint-config-airbnb": "^19.0.4",
+      "eslint-config-prettier": "^8.3.0",
+      "eslint-plugin-import": "^2.25.4",
+      "eslint-plugin-jsx-a11y": "^6.5.1",
+      "eslint-plugin-node": "^11.1.0",
+      "eslint-plugin-prettier": "^4.0.0",
+      "eslint-plugin-react": "^7.28.0",
+      "prettier": "^2.5.1"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
