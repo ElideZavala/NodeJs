@@ -2,8 +2,13 @@ extends base
 include _reviewCard
 //- Todo lo que esscribamos en este bloque se agregara a lo que ya esta ene ese bloque.
 block append head 
-	script(src='/js/mapbox.js') 
+	script(src='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js')
+	link(href='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css' rel='stylesheet')
+
+
+	//- script(src='/js/mapbox.js') 
 //- Inyectamos esta linea de codigo, en el bloque pincipal que ya esta en nuestra plantilla base.
+
 mixin overviewBox(label, text, icon)
 	.overview-box__detail
 		svg.overview-box__icon
@@ -68,7 +73,7 @@ block content
 				img.picture-box__img(src=`/img/tours/${img}`, alt=`${tour.name} Tour ${i + 1}`, class=`picture-box__img--${i + 1} `)
 
 	section.section-map
-		#map
+		#map(data-locations=`${JSON.stringify(tour.locations)}`)
 
 	section.section-reviews
 		.reviews
