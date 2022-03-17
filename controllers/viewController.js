@@ -16,7 +16,7 @@ exports.getOverview = catchAsync(async (req, res) => {
   });
 });
 
-exports.getTour = catchAsync(async (req, res) => {
+exports.getTour = catchAsync(async (req, res, next) => {
   // 1) Get the data, for the requested tour (including reviews and guides)
   // Vamos a buscar por un tour y luego vamos a incluir a reviews como path
   const tour = await Tour.findOne({ slug: req.params.slug }).populate({
@@ -40,14 +40,15 @@ exports.getTour = catchAsync(async (req, res) => {
       title: `${tour.name} Tour`,
       tour,
     });
+  next();
 });
 
-exports.getLogin = catchAsync(async (req, res) => {
+exports.getLoginForm = catchAsync(async (req, res) => {
   const users = await User.find();
   console.log(users);
 
   res.status(200).render('login', {
-    title: 'Login',
+    title: 'Log into your account ',
     users,
   });
 });

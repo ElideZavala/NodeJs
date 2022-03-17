@@ -6,6 +6,7 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const cookieParser = require('cookie-parser');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -47,6 +48,7 @@ app.use('/api', limiter); //Afectara a todas las rutas que comiencen con esto, l
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' })); // cuando tengamos un cuerpo con mas de 10kb no sera acceptado.
+app.use(cookieParser()); // <-- Analizara los datos de Cookie.
 
 // Data sanitization against NoSQL query injection
 app.use(mongoSanitize()); // Mira el cuerpo de la solicitudm cadena de consulta de la solucitud y las  signo de dolar.
@@ -71,7 +73,7 @@ app.use(
 // Test middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString(); // Optenemos la hora Actual.
-  // console.log(req.headers);
+  console.log(req.cookies); // <-- Ver el cookie que se encuetra guardado.
   next();
 });
 
