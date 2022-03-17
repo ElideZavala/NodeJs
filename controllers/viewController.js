@@ -2,7 +2,7 @@
 // Express buscara este archivo dentro de la carpeta que se especifico al principio.
 const Tour = require('../models/tourModel');
 // const Review = require('../models/reviewModel');
-// const User = require('../models/userModel');
+const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 
 exports.getOverview = catchAsync(async (req, res) => {
@@ -40,4 +40,14 @@ exports.getTour = catchAsync(async (req, res) => {
       title: `${tour.name} Tour`,
       tour,
     });
+});
+
+exports.getLogin = catchAsync(async (req, res) => {
+  const users = await User.find();
+  console.log(users);
+
+  res.status(200).render('login', {
+    title: 'Login',
+    users,
+  });
 });
