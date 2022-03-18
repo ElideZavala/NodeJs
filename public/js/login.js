@@ -1,7 +1,6 @@
 /* eslint-disable */
 
 const login = async (email, password) => {
-  console.log('emain, password :>> ', email, password);
   try {
     const res = await axios({
       method: 'POST',

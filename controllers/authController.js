@@ -1,10 +1,10 @@
 const crypto = require('crypto'); // Encriptacion.
 const { promisify } = require('util'); // Metodo para crear una utilidad.
 const jwt = require('jsonwebtoken');
-const User = require('./../models/userModel');
-const catchAsync = require('./../utils/catchAsync');
-const AppError = require('./../utils/appError');
-const sendEmail = require('./../utils/email');
+const User = require('../models/userModel');
+const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
+const sendEmail = require('../utils/email');
 
 // Tomara el id y lo regresara de inmediato en un token.
 const signToken = (id) => {
@@ -119,6 +119,35 @@ exports.protect = catchAsync(async (req, res, next) => {
   next();
 });
 
+// Only for rendered pages, no errors!
+exports.isLoggedIn = catchAsync(async (req, res, next) => {
+  if (req.cookies.jwt) {
+    // 2) Verification token.
+    const decoded = await promisify(jwt.verify)(
+      req.cookies.jwt,
+      process.env.JWT_SECRET
+    ); // Utilizamos promisify de util.
+    //Obtenemos nuestro Id con las variables id,iat y exp. // Lo mismo realizado en JWT.io.
+
+    // 2) Check if user still exists.
+    const currentUser = await User.findById(decoded.id); // tomamos el id de nuestro tokes desestructurado.
+    if (!currentUser) {
+      return next();
+    }
+
+    // 4) Check if user changed password after the token was issued.
+    if (currentUser.changedPasswordAfter(decoded.iat)) {
+      return next();
+    }
+
+    // THERE IS A LOGGED IN USER.
+    res.locals.user = currentUser; // <-- Realizamos una respuesta local llamada user.
+    return next();
+  }
+  next();
+});
+
+/*eslint arrow-body-style: ["error", "always"]*/
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     // roles ['admin', 'lead-guide']. role='user' // solo nos traera dos valores, los cuales se covierten en arreglo
@@ -128,7 +157,6 @@ exports.restrictTo = (...roles) => {
         new AppError('You do not have permission to perform this action', 403)
       );
     }
-
     next();
   };
 };
