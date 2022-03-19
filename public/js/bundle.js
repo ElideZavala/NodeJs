@@ -8824,7 +8824,35 @@ module.exports.default = axios;
 
 },{"./utils":"../../node_modules/axios/lib/utils.js","./helpers/bind":"../../node_modules/axios/lib/helpers/bind.js","./core/Axios":"../../node_modules/axios/lib/core/Axios.js","./core/mergeConfig":"../../node_modules/axios/lib/core/mergeConfig.js","./defaults":"../../node_modules/axios/lib/defaults/index.js","./cancel/Cancel":"../../node_modules/axios/lib/cancel/Cancel.js","./cancel/CancelToken":"../../node_modules/axios/lib/cancel/CancelToken.js","./cancel/isCancel":"../../node_modules/axios/lib/cancel/isCancel.js","./env/data":"../../node_modules/axios/lib/env/data.js","./helpers/spread":"../../node_modules/axios/lib/helpers/spread.js","./helpers/isAxiosError":"../../node_modules/axios/lib/helpers/isAxiosError.js"}],"../../node_modules/axios/index.js":[function(require,module,exports) {
 module.exports = require('./lib/axios');
-},{"./lib/axios":"../../node_modules/axios/lib/axios.js"}],"login.js":[function(require,module,exports) {
+},{"./lib/axios":"../../node_modules/axios/lib/axios.js"}],"alerts.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.showAlert = exports.hideAlert = void 0;
+
+/* eslint-disable */
+var hideAlert = function hideAlert() {
+  var el = document.querySelector('.alert'); // <-- Seleccionamos la clase alert.
+
+  if (el) el.parentElement.removeChild(el);
+}; // type is "success" of "error"
+
+
+exports.hideAlert = hideAlert;
+
+var showAlert = function showAlert(type, msg) {
+  hideAlert(); // <-- si existe una alerta la vamos a eliminar.
+
+  var markup = "<div class=\"alert alert--".concat(type, "\">").concat(msg, "</div>\"");
+  document.querySelector('body').insertAdjacentHTML('afterbegin', markup); // dentro del cuerpo pero desde el principio.
+
+  window.setTimeout(hideAlert, 5000);
+};
+
+exports.showAlert = showAlert;
+},{}],"login.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -8832,7 +8860,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.login = void 0;
 
-var _axios = require("axios");
+var _axios = _interopRequireDefault(require("axios"));
+
+var _alerts = require("./alerts");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
@@ -8845,10 +8877,9 @@ var login = /*#__PURE__*/function () {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            console.log(email, password);
-            _context.prev = 1;
-            _context.next = 4;
-            return (0, _axios.axios)({
+            _context.prev = 0;
+            _context.next = 3;
+            return (0, _axios.default)({
               method: 'POST',
               url: 'http://127.0.0.1:3000/api/v1/users/login',
               // Hacemos la peticion a esta URL
@@ -8858,30 +8889,30 @@ var login = /*#__PURE__*/function () {
               }
             });
 
-          case 4:
+          case 3:
             res = _context.sent;
 
             if (res.data.status === 'success') {
-              alert('Logged in successfully!');
+              (0, _alerts.showAlert)('success', 'Logged in successfully!');
               window.setTimeout(function () {
                 location.assign('/');
               }, 1500);
             }
 
-            _context.next = 11;
+            _context.next = 10;
             break;
 
-          case 8:
-            _context.prev = 8;
-            _context.t0 = _context["catch"](1);
-            alert(_context.t0.response.data.message);
+          case 7:
+            _context.prev = 7;
+            _context.t0 = _context["catch"](0);
+            (0, _alerts.showAlert)('error', _context.t0.response.data.message);
 
-          case 11:
+          case 10:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[1, 8]]);
+    }, _callee, null, [[0, 7]]);
   }));
 
   return function login(_x, _x2) {
@@ -8890,7 +8921,7 @@ var login = /*#__PURE__*/function () {
 }();
 
 exports.login = login;
-},{"axios":"../../node_modules/axios/index.js"}],"index.js":[function(require,module,exports) {
+},{"axios":"../../node_modules/axios/index.js","./alerts":"alerts.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 require("core-js/modules/es6.array.copy-within.js");
@@ -9163,21 +9194,21 @@ var _login = require("./login");
 
 // DOM ELEMENTS
 var mapBox = document.getElementById('map');
-var loginForm = document.querySelector('.form'); // VALUES
-
-var email = document.querySelector('#email').value;
-var password = document.querySelector('#password').value; // DELEGATION  // <-- Si en el documento existe mapBox evitara que se ejecute en otros archivos.
+var loginForm = document.querySelector('.form'); // DELEGATION  // <-- Si en el documento existe mapBox evitara que se ejecute en otros archivos.
 
 if (mapBox) {
   var locations = JSON.parse(mapBox.dataset.locations); // Leemos los datos de data-locations en Pug.
 
   (0, _mapbox.displayMap)(locations);
 } // 🔽 Si existe en la Pag se ejecutara el siguiente codigo.
+// Al dar summit se envian los valores de la contraseña y el password
 
 
 if (loginForm) {
   loginForm.addEventListener('submit', function (e) {
     e.preventDefault();
+    var email = document.getElementById('email').value;
+    var password = document.getElementById('password').value;
     (0, _login.login)(email, password);
   });
 }
@@ -9209,7 +9240,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53910" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61821" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
