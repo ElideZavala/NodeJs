@@ -4,6 +4,7 @@ const Tour = require('../models/tourModel');
 // const Review = require('../models/reviewModel');
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 
 exports.getOverview = catchAsync(async (req, res) => {
   // 1) Get tour data from collection
@@ -23,6 +24,10 @@ exports.getTour = catchAsync(async (req, res, next) => {
     path: 'reviews', // ?
     fields: 'review rating user', // Obtenemos estos campos.
   });
+
+  if (!tour) {
+    return next(new AppError('There is no tour with that name.', 404));
+  }
 
   //    const reviews = await Review.findOne();
   //    const users = await User.findOne();
