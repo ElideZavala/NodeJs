@@ -129,32 +129,37 @@ exports.protect = catchAsync(async (req, res, next) => {
 });
 
 // Only for rendered pages, no errors!
-exports.isLoggedIn = catchAsync(async (req, res, next) => {
+exports.isLoggedIn = async (req, res, next) => {
   if (req.cookies.jwt) {
-    // 2) Verification token.
-    const decoded = await promisify(jwt.verify)(
-      req.cookies.jwt,
-      process.env.JWT_SECRET
-    ); // Utilizamos promisify de util.
-    //Obtenemos nuestro Id con las variables id,iat y exp. // Lo mismo realizado en JWT.io.
+    try {
+      // 2) Verification token.
+      const decoded = await promisify(jwt.verify)(
+        req.cookies.jwt,
+        process.env.JWT_SECRET
+      ); // Utilizamos promisify de util.
+      //Obtenemos nuestro Id con las variables id,iat y exp. // Lo mismo realizado en JWT.io.
 
-    // 2) Check if user still exists.
-    const currentUser = await User.findById(decoded.id); // tomamos el id de nuestro tokes desestructurado.
-    if (!currentUser) {
+      // 2) Check if user still exists.
+      const currentUser = await User.findById(decoded.id); // tomamos el id de nuestro tokes desestructurado.
+      if (!currentUser) {
+        return next();
+      }
+
+      // 4) Check if user changed password after the token was issued.
+      if (currentUser.changedPasswordAfter(decoded.iat)) {
+        return next();
+      }
+
+      // THERE IS A LOGGED IN USER.
+      res.locals.user = currentUser; // <-- Realizamos una respuesta local llamada user.
+      return next();
+    } catch (error) {
       return next();
     }
-
-    // 4) Check if user changed password after the token was issued.
-    if (currentUser.changedPasswordAfter(decoded.iat)) {
-      return next();
-    }
-
-    // THERE IS A LOGGED IN USER.
-    res.locals.user = currentUser; // <-- Realizamos una respuesta local llamada user.
-    return next();
   }
+
   next();
-});
+};
 
 /*eslint arrow-body-style: ["error", "always"]*/
 exports.restrictTo = (...roles) => {
