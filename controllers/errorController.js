@@ -87,10 +87,10 @@ const sendErrorProd = (err, req, res) => {
 };
 
 module.exports = (err, req, res, next) => {
-  // El modulo de exportacion sera igual a esta funcion
-  //   console.log(err.stack); // Nos muestra la direccion de nuestro error. // Seguimiento de la pila
+  // El modulo de exportacion sera igual a est a funcion
+  //   console.log(err.stack); // Nos muestra  la direccion de nuestro error. // Seguimiento de la pila
 
-  // err.message = err.message || 'Something went wrong! Please try again later';
+  // err.message = err.message || 'Something w ent wrong! Please try again later';
   err.statusCode = err.statusCode || 500;
   err.status = err.status || 'error';
 
