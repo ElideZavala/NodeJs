@@ -57,6 +57,7 @@ exports.getAccount = (req, res) => {
   });
 };
 
-exports.updateUserData = (req, res, next) => {
-  console.log(req.body);
-};
+exports.updateUserData = catchAsync(async (req, res, next) => {
+  // [ ] Importar el modelo de usuario
+  const user = await User.findByIdAndUpdate(req.user.id);
+});
