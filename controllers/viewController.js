@@ -46,11 +46,13 @@ exports.getTour = catchAsync(async (req, res, next) => {
 });
 
 exports.getLoginForm = catchAsync(async (req, res) => {
-  const users = await User.find();
-  console.log(users);
-
   res.status(200).render('login', {
     title: 'Log into your account ',
-    users,
   });
 });
+
+exports.getAccount = (req, res) => {
+  res.status(200).render('account', {
+    title: 'Your account ',
+  });
+};
