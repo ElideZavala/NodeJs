@@ -29,10 +29,7 @@ exports.getTour = catchAsync(async (req, res, next) => {
     return next(new AppError('There is no tour with that name.', 404));
   }
 
-  //    const reviews = await Review.findOne();
-  //    const users = await User.findOne();
   // 2) Build template
-
   // 3) Render template using data form
 
   res

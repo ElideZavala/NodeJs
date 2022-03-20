@@ -70,6 +70,7 @@ const sendErrorProd = (err, req, res) => {
   // B) RENDERED WEBSITE
   // A) Operational, trusted error: send message to client
   if (err.isOperational) {
+    console.log(err);
     return res.status(err.statusCode).render('error', {
       title: 'Something went wrong',
       msg: err.message,
@@ -79,8 +80,8 @@ const sendErrorProd = (err, req, res) => {
   // 1) Log error
   console.error('ERROR ✨', err);
   // 2) Send generic message
-  return res.status(500).json({
-    status: 'error',
+  return res.status(err.statusCode).render('error', {
+    title: 'Something went wrong',
     message: 'Please try again later',
   });
 };
@@ -88,13 +89,17 @@ const sendErrorProd = (err, req, res) => {
 module.exports = (err, req, res, next) => {
   // El modulo de exportacion sera igual a esta funcion
   //   console.log(err.stack); // Nos muestra la direccion de nuestro error. // Seguimiento de la pila
+
+  // err.message = err.message || 'Something went wrong! Please try again later';
   err.statusCode = err.statusCode || 500;
   err.status = err.status || 'error';
 
   if (process.env.NODE_ENV === 'development') {
     sendErrorDev(err, req, res);
   } else if (process.env.NODE_ENV === 'production') {
+    // Este objeto de error usado es una copia de este error
     let error = { ...err };
+    error.message = err.message;
 
     if (error.name === 'CastError') error = handleCastErrorDB(error);
     if (error.code === 11000) error = handleDuplicateFieldsDB(error);
@@ -103,6 +108,8 @@ module.exports = (err, req, res, next) => {
     if (error.name === 'JsonWebTokenError') error = handleJWTError();
     if (error.name === 'TokenExpiredError') error = handleJWTExpiredError();
 
+    console.log(err.message);
+    console.log(error.message);
     sendErrorProd(error, req, res);
   }
 };
