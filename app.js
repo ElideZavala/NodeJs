@@ -49,7 +49,7 @@ app.use('/api', limiter); //Afectara a todas las rutas que comiencen con esto, l
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' })); // cuando tengamos un cuerpo con mas de 10kb no sera acceptado.
 // Obtener los valores del; formulario o codificacion de la Url.
-app.use(express.urlencoded({ extended: true, limit: '10kb' })); // limite de cambios con solo 10kb.
+app.use(express.urlencoded({ url: true, limit: '10kb' })); // limite de cambios con solo 10kb.
 app.use(cookieParser()); // <-- Analizara los datos de Cookie.
 
 // Data sanitization against NoSQL query injection

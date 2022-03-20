@@ -2,11 +2,13 @@
 import '@babel/polyfill';
 import { displayMap } from './mapbox';
 import { login, logout } from './login';
+import { updateData } from './updateSettings';
 
 // DOM ELEMENTS
 const mapBox = document.getElementById('map');
 const loginForm = document.querySelector('.form--login');
 const logOutBtn = document.querySelector('.nav__el.nav__el--logout');
+const userDataForm = document.querySelector('.form-user-data');
 
 // DELEGATION  // <-- Si en el documento existe mapBox evitara que se ejecute en otros archivos.
 if (mapBox) {

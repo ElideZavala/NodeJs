@@ -58,6 +58,21 @@ exports.getAccount = (req, res) => {
 };
 
 exports.updateUserData = catchAsync(async (req, res, next) => {
-  // [ ] Importar el modelo de usuario
-  const user = await User.findByIdAndUpdate(req.user.id);
+  //  Importar el modelo de usuario
+  const updateUser = await User.findByIdAndUpdate(
+    req.user.id,
+    {
+      name: req.body.name,
+      email: req.body.email,
+    },
+    {
+      new: true, // Obtener lo nuevo, lo mas actual.
+      runValidator: true, // Ejecutar los validares
+    }
+  );
+
+  res.status(200).render('account', {
+    title: 'Your account ',
+    user: updateUser,
+  });
 });
