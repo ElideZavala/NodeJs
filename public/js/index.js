@@ -2,13 +2,14 @@
 import '@babel/polyfill';
 import { displayMap } from './mapbox';
 import { login, logout } from './login';
-import { updateData } from './updateSettings';
+import { updateSettings } from './updateSettings';
 
 // DOM ELEMENTS
 const mapBox = document.getElementById('map');
 const loginForm = document.querySelector('.form--login');
 const logOutBtn = document.querySelector('.nav__el.nav__el--logout');
 const userDataForm = document.querySelector('.form-user-data');
+const userPasswordForm = document.querySelector('.form-user-password');
 
 // DELEGATION  // <-- Si en el documento existe mapBox evitara que se ejecute en otros archivos.
 if (mapBox) {
@@ -36,5 +37,19 @@ if (userDataForm)
     const email = document.getElementById('email').value;
     // const photo = document.querySelector('img').setAttribute('src', url);
     // console.log(photo);
-    updateData(name, email);
+    updateSettings({ name, email }, 'data');
+  });
+
+if (userPasswordForm)
+  userPasswordForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const passwordCurrent = document.getElementById('password-current').value;
+    const password = document.getElementById('password').value;
+    const passwordConfirm = document.getElementById('password-confirm').value;
+    // const photo = document.querySelector('img').setAttribute('src', url);
+    // console.log(photo);
+    await updateSettings(
+      { passwordCurrent, password, passwordConfirm },
+      'password'
+    );
   });
