@@ -47,9 +47,6 @@ exports.getMe = (req, res, next) => {
 };
 
 exports.updateMe = catchAsync(async (req, res, next) => {
-  console.log(req.file);
-  console.log(req.body);
-
   // 1) Create error if user POSTs password data
   if (req.body.password || req.body.passwordConfirm) {
     return next(
@@ -62,6 +59,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 
   // 2) Filtered out unwanted fields names that are not allowed to be updated //solo los que requerimos.
   const filterBody = filterObj(req.body, 'name', 'email'); // Del objeto req.body filtramos el nombre y el email
+  if (req.file) filterBody.photo = req.file.filename; // agregamos la propiedad photo y la actualizamos con la que hay en el campo filename, esto en caso de que exista un campo.
 
   // 3) Update user document
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filterBody, {
