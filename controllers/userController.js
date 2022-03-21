@@ -2,6 +2,35 @@ const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const factory = require('./handlerFactory');
+const multer = require('multer');
+
+const multerStorage = multer.diskStorage({
+  // req, campo y la devolucion de llamada.
+  destination: (req, file, cb) => {
+    cb(null, 'public/img/users'); // 1- Error si hay uno, 2- Destino real.
+  },
+  filename: (req, file, cb) => {
+    const ext = file.mimetype.split('/')[1]; // Seleccionamos el segundo elemento.
+    cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
+  },
+}); // Almacenamiento de multer
+
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image')) {
+    cb(null, true);
+  } else {
+    cb(new AppError('No an image! Please upload only images', 400), false); // mandamos un mensaje de error y no abra almacenamiento.
+  }
+};
+
+// Opciones para multer, Especificamos el destino de imagenes.
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter,
+});
+
+// Incluimos que tenga solo una foto y luego lo exportamos.
+exports.uploadUserPhoto = upload.single('photo');
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
