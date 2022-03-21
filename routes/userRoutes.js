@@ -1,4 +1,5 @@
 const express = require('express');
+const multer = require('multer');
 const {
   getAllUsers,
   createUser,
@@ -20,6 +21,8 @@ const {
   logout,
 } = require('../controllers/authController');
 
+const upload = multer({ dest: 'public/img/users' }); // Opciones para multer, Especificamos el destino de imagenes.
+
 const router = express.Router();
 
 router.post('/signup', signup);
@@ -33,7 +36,7 @@ router.use(protect); // Vamos a proteger todas las rutas que vienen despues de e
 
 router.patch('/updateMyPassword', updatePassword);
 router.get('/me', getMe, getUser);
-router.patch('/updateMe', updateMe);
+router.patch('/updateMe', upload.single('photo'), updateMe); // nombre del campo que contendra el archivo
 router.delete('/deleteMe', deleteMe);
 
 router.use(restrictTo('admin')); // Solo los administrador podran ejecutar los siguientes middleware, ademas que ya contaran con su respectiva proteccion.

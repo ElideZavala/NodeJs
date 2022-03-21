@@ -75,7 +75,6 @@ app.use(
 // Test middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString(); // Optenemos la hora Actual.
-  console.log(req.cookies); // <-- Ver el cookie que se encuetra guardado.
   next();
 });
 
