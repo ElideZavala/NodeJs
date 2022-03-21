@@ -28,3 +28,13 @@ if (loginForm) {
 }
 
 if (logOutBtn) logOutBtn.addEventListener('click', logout);
+
+if (userDataForm)
+  userDataForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    // const photo = document.querySelector('img').setAttribute('src', url);
+    // console.log(photo);
+    updateData(name, email);
+  });

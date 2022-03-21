@@ -10,7 +10,6 @@ export const updateData = async (name, email) => {
       data: {
         name,
         email,
-        photo,
       },
     });
 
