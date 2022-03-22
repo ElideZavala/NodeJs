@@ -33,11 +33,13 @@ if (logOutBtn) logOutBtn.addEventListener('click', logout);
 if (userDataForm)
   userDataForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
+    const form = new FormData();
+    form.append('name', document.getElementById('name').value); // Con el emtod append de la clase FormData.
+    form.append('email', document.getElementById('email').value); // agregamos los valores.
+    form.append('photo', document.getElementById('photo').files[0]); // agregamos la foto que esta en el array.
     // const photo = document.querySelector('img').setAttribute('src', url);
-    // console.log(photo);
-    updateSettings({ name, email }, 'data');
+    console.log(form); // Datos del formulario.
+    updateSettings(form, 'data');
   });
 
 if (userPasswordForm)

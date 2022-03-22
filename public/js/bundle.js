@@ -9333,14 +9333,17 @@ if (loginForm) {
 if (logOutBtn) logOutBtn.addEventListener('click', _login.logout);
 if (userDataForm) userDataForm.addEventListener('submit', function (e) {
   e.preventDefault();
-  var name = document.getElementById('name').value;
-  var email = document.getElementById('email').value; // const photo = document.querySelector('img').setAttribute('src', url);
-  // console.log(photo);
+  var form = new FormData();
+  form.append('name', document.getElementById('name').value); // Con el emtod append de la clase FormData.
 
-  (0, _updateSettings.updateSettings)({
-    name: name,
-    email: email
-  }, 'data');
+  form.append('email', document.getElementById('email').value); // agregamos los valores.
+
+  form.append('photo', document.getElementById('photo').files[0]); // agregamos la foto que esta en el array.
+  // const photo = document.querySelector('img').setAttribute('src', url);
+
+  console.log(form); // Datos del formulario.
+
+  (0, _updateSettings.updateSettings)(form, 'data');
 });
 if (userPasswordForm) userPasswordForm.addEventListener('submit', /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
