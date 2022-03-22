@@ -1,22 +1,27 @@
 const User = require('../models/userModel');
+const sharp = require('sharp');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const factory = require('./handlerFactory');
 const multer = require('multer');
 
-const multerStorage = multer.diskStorage({
-  // req, campo y la devolucion de llamada.
-  destination: (req, file, cb) => {
-    cb(null, 'public/img/users'); // 1- Error si hay uno, 2- Destino real.
-  },
-  filename: (req, file, cb) => {
-    const ext = file.mimetype.split('/')[1]; // Seleccionamos el segundo elemento.
-    cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
-  },
-}); // Almacenamiento de multer
+// const multerStorage = multer.diskStorage({
+//   // req, campo y la devolucion de llamada.
+//   destination: (req, file, cb) => {
+//     cb(null, 'public/img/users'); // 1- Error si hay uno, 2- Destino real.
+//   },
+//   filename: (req, file, cb) => {
+//     const ext = file.mimetype.split('/')[1]; // Seleccionamos el segundo elemento.
+//     cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
+//   },
+// }); // Almacenamiento de multer
 
+const multerStorage = multer.memoryStorage(); // La imagen se almacena como un buffer.
+
+// Solo Podemos subir Imagenes
 const multerFilter = (req, file, cb) => {
   if (file.mimetype.startsWith('image')) {
+    // Si el objeto empieza con image
     cb(null, true);
   } else {
     cb(new AppError('No an image! Please upload only images', 400), false); // mandamos un mensaje de error y no abra almacenamiento.
@@ -31,6 +36,22 @@ const upload = multer({
 
 // Incluimos que tenga solo una foto y luego lo exportamos.
 exports.uploadUserPhoto = upload.single('photo');
+
+// Se ejecutara despues de que carge la foto.
+exports.resizeUserPhoto = (req, res, next) => {
+  if (!req.file) return next(); // Si no tenemos el campo que incluye la foto que pase de largo .
+
+  req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
+
+  // La imagen estara disponible en el buffer.
+  sharp(req.file.buffer)
+    .resize(500, 500)
+    .toFormat('jpeg')
+    .jpeg({ quality: 90 })
+    .toFile(`public/img/users/${req.file.filename}`); // Guardamos este archivo con su nombre.
+
+  next();
+};
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};

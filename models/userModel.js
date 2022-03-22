@@ -16,7 +16,10 @@ const userSchema = new mongoose.Schema({
     lowercase: true, // Will convert the email to lowercase
     validate: [validator.isEmail, 'Please provide a valid email'], // We validate a real email
   },
-  photo: String,
+  photo: {
+    type: String,
+    default: 'default.jpg',
+  },
   role: {
     type: String,
     enum: ['user', 'guide', 'lead-guide', 'admin'], // Especificamos los tipos de usuarios validos.

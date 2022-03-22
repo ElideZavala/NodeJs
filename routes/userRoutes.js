@@ -9,6 +9,7 @@ const {
   updateMe,
   deleteMe,
   uploadUserPhoto,
+  resizeUserPhoto,
 } = require('../controllers/userController');
 const {
   signup,
@@ -34,7 +35,7 @@ router.use(protect); // Vamos a proteger todas las rutas que vienen despues de e
 
 router.patch('/updateMyPassword', updatePassword);
 router.get('/me', getMe, getUser);
-router.patch('/updateMe', uploadUserPhoto, updateMe); // nombre del campo que contendra el archivo
+router.patch('/updateMe', uploadUserPhoto, resizeUserPhoto, updateMe); // nombre del campo que contendra el archivo
 router.delete('/deleteMe', deleteMe);
 
 router.use(restrictTo('admin')); // Solo los administrador podran ejecutar los siguientes middleware, ademas que ya contaran con su respectiva proteccion.
