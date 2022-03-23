@@ -30,10 +30,15 @@ exports.uploadTourImages = upload.fields([
   { name: 'images', maxCount: 3 }, // Vamos a aceptar 3 Imagenes con este nombre.
 ]);
 
+exports.resizeTourImages = (req, res, next) => {
+  console.log(req.files);
+  next();
+};
+
 // En caso que tubieramos multiples imagenes pero que soo acepte un nombre pordemos realizarlo asi 🔽
-// upload.array('images', 5);
+// upload.array('images', 5); // ===> req.file
 // // Solo un campo o una imagen
-// upload.single('image');
+// upload.single('image'); // ===> req.files
 //////////////////////
 
 exports.aliasTopTours = (req, res, next) => {
