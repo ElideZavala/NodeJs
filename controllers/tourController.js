@@ -1,7 +1,40 @@
+const multer = require('multer');
+const sharp = require('sharp');
 const Tour = require('../models/tourModel');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
 const AppError = require('../utils/appError');
+
+// Solo las imagenes sera almacenadas en el multer.
+const multerStorage = multer.memoryStorage(); // La imagen se almacena como un buffer.
+
+// Solo Podemos subir Imagenes
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image')) {
+    // Si el objeto empieza con image
+    cb(null, true);
+  } else {
+    cb(new AppError('No an image! Please upload only images', 400), false); // mandamos un mensaje de error y no abra almacenamiento.
+  }
+};
+
+// Opciones para multer, Especificamos el destino de imagenes.
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter,
+});
+
+// Vamos a selecionar varios campos para las Imagenes.
+exports.uploadTourImages = upload.fields([
+  { name: 'imageCover', maxCount: 1 }, // Solo vamos a aceptar una imagen con este nombre.
+  { name: 'images', maxCount: 3 }, // Vamos a aceptar 3 Imagenes con este nombre.
+]);
+
+// En caso que tubieramos multiples imagenes pero que soo acepte un nombre pordemos realizarlo asi 🔽
+// upload.array('images', 5);
+// // Solo un campo o una imagen
+// upload.single('image');
+//////////////////////
 
 exports.aliasTopTours = (req, res, next) => {
   req.query.limit = '5';
