@@ -38,20 +38,20 @@ const upload = multer({
 exports.uploadUserPhoto = upload.single('photo');
 
 // Se ejecutara despues de que carge la foto.
-exports.resizeUserPhoto = (req, res, next) => {
+exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
   if (!req.file) return next(); // Si no tenemos el campo que incluye la foto que pase de largo .
 
   req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
 
-  // La imagen estara disponible en el buffer.
-  sharp(req.file.buffer)
+  // La imagen estara disponible en el buffer. // Devolvera una promesa.
+  await sharp(req.file.buffer)
     .resize(500, 500)
     .toFormat('jpeg')
     .jpeg({ quality: 90 })
     .toFile(`public/img/users/${req.file.filename}`); // Guardamos este archivo con su nombre.
 
   next();
-};
+});
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};

@@ -30,10 +30,21 @@ exports.uploadTourImages = upload.fields([
   { name: 'images', maxCount: 3 }, // Vamos a aceptar 3 Imagenes con este nombre.
 ]);
 
-exports.resizeTourImages = (req, res, next) => {
-  console.log(req.files);
+exports.resizeTourImages = catchAsync(async (req, res, next) => {
+  // Seguiremos de largo si en el buffer no se encuentra nigun campos de estos.
+  if (!req.files.imageCover || !req.files.images) return next();
+
+  // 1) Cover image
+  req.body.imageCover = `tour-${req.params.id}-${Date.now()}-cover.jpeg`;
+  await sharp(req.files.imageCover[0].buffer)
+    .resize(2000, 1333)
+    .toFormat('jpeg')
+    .jpeg({ quality: 90 })
+    .toFile(`public/img/tours/${req.body.imageCover}`); // Guardamos este archivo con su nombre.
+  // 2) Images.
+
   next();
-};
+});
 
 // En caso que tubieramos multiples imagenes pero que soo acepte un nombre pordemos realizarlo asi 🔽
 // upload.array('images', 5); // ===> req.file
