@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 const pug = require('pug');
-// new Email(user, url).sendWelcome();
+const { htmlToText } = require('html-to-text');
 
 module.exports = class Email {
   constructor(user, url) {
@@ -10,7 +10,7 @@ module.exports = class Email {
     this.from = `Elide Zavala <${process.env.EMAIL_FROM}>`;
   }
 
-  createTransport() {
+  newTransport() {
     if (process.env.NODE_ENV === 'production') {
       // sendgrid
       return 1;
@@ -28,33 +28,32 @@ module.exports = class Email {
     });
   }
 
-  send(template, subject) {
+  async send(template, subject) {
     // 1) Render HTML based on a pug template
     // Convertira el codigo pug en HTML real y la guardamos en una variable.
-    const html = pug.renderFile(`${__dirname}/../views/emails/${template}.pug`);
+    const html = pug.renderFile(
+      `${__dirname}/../views/emails/${template}.pug`,
+      {
+        firstName: this.firstName,
+        url: this.url,
+        subject,
+      }
+    );
 
     // 2) Define email options
     const mailOptions = {
-      from: 'Elide Zavala <admin@gmail.com>',
-      to: options.email, // Correo al que lo vamos enviar.
-      subject: options.subject, // Asunto
-      text: options.message, // mensaje del correo electronico.
-      // html:
+      from: this.from,
+      to: this.to, // Correo al que lo vamos enviar.
+      subject, // Asunto
+      html, // WebSite que se a representar.
+      text: htmlToText(html), // mensaje del correo electronico.
     };
 
-    // 3) Create a transport and send email.
+    // 3) Create a transport and send email. Enviamos el newTransportcon nuestras opciones.
+    await this.newTransport().sendMail(mailOptions); // Enviamos el Email.
   }
 
-  sendWelcome() {
-    this.send('welcome', 'Welcome to the Natours Family!');
+  async sendWelcome() {
+    await this.send('welcome', 'Welcome to the Natours Family!');
   }
 };
-
-const sendEmail = async (options) => {
-  // 2) Define the email options
-
-  // 1) Actually send the email
-  await transporter.sendMail(mailOptions); // Enviamos el Email.
-};
-
-module.exports = sendEmail;
