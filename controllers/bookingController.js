@@ -20,7 +20,10 @@ exports.getChekoutSession = catchAsync(async (req, res, next) => {
       {
         name: `${tour.name} Tour`,
         description: tour.summary,
-        images: [`https://www/natours.dev/img/tours/${tour.imageCover}`],
+        images: [`https://www.natours.dev/img/tours/${tour.imageCover}`],
+        // images: [
+        //   `${req.protocol}://${req.get('host')}/img/tours/${tour.imageCover}`,
+        // ],
         amount: tour.price * 100, // la cantidad esta dada en centabos por lo que multiplica por 100 para la moneda local.
         currency: 'usd', // Tipo de moneda usada.
         quantity: 1, // cantidad de producto
