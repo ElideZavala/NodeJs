@@ -85,7 +85,7 @@ app.use('/', viewRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
-app.use('/api/v1/booking', bookingsRouter);
+app.use('/api/v1/bookings', bookingRouter);
 
 // .all Se ejecuta para todos los verbos{get, post, patch, delete} * Representara que todo esta bien
 app.all('*', (req, res, next) => {
