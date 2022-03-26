@@ -170,7 +170,7 @@ exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
 // tour-within/233/center/33.92671721939491, -118.02108560974635,/unit/mi
 
 exports.getToursWithin = catchAsync(async (req, res, next) => {
-  const { distance, latlng, unit } = req.params;
+  const { distance, latlng, unit } = req.params; // Obtenemos la distancia , latitud y inidad usada en el params.
   const [lat, lng] = latlng.split(','); // lo dividimos por coma.
 
   // Los radiales se optinen por medir la distancia por el radio de la tierra.

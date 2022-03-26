@@ -2,7 +2,7 @@ const Stripe = require('stripe');
 const Tour = require('../models/tourModel');
 const Booking = require('../models/bookingModel');
 const catchAsync = require('../utils/catchAsync');
-// const factory = require('./handlerFactory');
+const factory = require('./handlerFactory');
 // const AppError = require('../utils/appError');
 
 exports.getChekoutSession = catchAsync(async (req, res, next) => {
@@ -50,3 +50,9 @@ exports.createBookingCheckout = catchAsync(async (req, res, next) => {
   //    res.redirect(${req.protocol}://${req.get('host')}); // Redireccionamos el sitio web
   res.redirect(req.originalUrl.split('?')[0]); // Separamos la URL por ? y seleccionamos el primer valor.
 });
+
+exports.createBooking = factory.createOne(Booking);
+exports.getBooking = factory.getOne(Booking);
+exports.getAllBooking = factory.getAll(Booking);
+exports.updateBooking = factory.updateOne(Booking);
+exports.deleteBooking = factory.deleteOne(Booking);
