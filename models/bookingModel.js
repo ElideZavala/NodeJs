@@ -26,11 +26,13 @@ const bookingSchema = new mongoose.Schema({
   },
 });
 
+// Todos los pre-middleware tienen acceso a la siguiente funcion. next(), siempre tenemos que llamarla.
 bookingSchema.pre(/^find/, function (next) {
   this.populate('user').populate({
     path: 'tour',
     select: 'name', // seleccionamos el nombre del tour.
   });
+  next();
 });
 
 const Booking = mongoose.model('Booking', bookingSchema);

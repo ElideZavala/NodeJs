@@ -45,7 +45,7 @@ exports.createBookingCheckout = catchAsync(async (req, res, next) => {
   const { tour, user, price } = req.query;
 
   if (!tour && !user && !price) return next(); // En caso de que no haya usuario, tour y presio, continuar a la siguiente.
-  await Booking.create({ tour, user, price }); // De nuestro modelo creamos estos Elementos.
+  await Booking.create({ tour, user, price }); // De nuestro modelo pasamos estos Elementos.
 
   //    res.redirect(${req.protocol}://${req.get('host')}); // Redireccionamos el sitio web
   res.redirect(req.originalUrl.split('?')[0]); // Separamos la URL por ? y seleccionamos el primer valor.
