@@ -8,6 +8,8 @@ import { bookTour } from './stripe'; // Seleccionamos nuestro elemento de la pag
 // DOM ELEMENTS
 const mapBox = document.getElementById('map');
 const loginForm = document.querySelector('.form--login');
+const singUpForm = document.querySelector('.form--signUp');
+const singUpBtn = document.querySelector('.btn--green');
 const logOutBtn = document.querySelector('.nav__el.nav__el--logout');
 const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
@@ -27,6 +29,17 @@ if (loginForm) {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     login(email, password);
+    // signUp(email, password)
+  });
+}
+
+if (singUpForm) {
+  singUpForm.addEventListener('submit', (e) => {
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const passwordConfirm = document.getElementById('passwordConfirm').value;
+    signUp(name, email, password, passwordConfirm);
   });
 }
 

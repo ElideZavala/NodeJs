@@ -9376,6 +9376,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 // DOM ELEMENTS
 var mapBox = document.getElementById('map');
 var loginForm = document.querySelector('.form--login');
+var singUpForm = document.querySelector('.form--signUp');
+var singUpBtn = document.querySelector('.btn--green');
 var logOutBtn = document.querySelector('.nav__el.nav__el--logout');
 var userDataForm = document.querySelector('.form-user-data');
 var userPasswordForm = document.querySelector('.form-user-password');
@@ -9394,7 +9396,17 @@ if (loginForm) {
     e.preventDefault();
     var email = document.getElementById('email').value;
     var password = document.getElementById('password').value;
-    (0, _login.login)(email, password);
+    (0, _login.login)(email, password); // signUp(email, password)
+  });
+}
+
+if (singUpForm) {
+  singUpForm.addEventListener('submit', function (e) {
+    var name = document.getElementById('name').value;
+    var email = document.getElementById('email').value;
+    var password = document.getElementById('password').value;
+    var passwordConfirm = document.getElementById('passwordConfirm').value;
+    signUp(name, email, password, passwordConfirm);
   });
 }
 

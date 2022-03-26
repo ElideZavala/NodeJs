@@ -92,3 +92,20 @@ exports.updateUserData = catchAsync(async (req, res, next) => {
     user: updateUser,
   });
 });
+
+exports.createUser = catchAsync(async (req, res, next) => {
+  try {
+    // const { name, email, password, passwordConfirm } = req.body;
+
+    // const user = await User.create(name, email, password, passwordConfirm);
+
+    // res.redirect(req.originalUrl);
+
+    res.status(200).render('signUp', {
+      title: 'Create account ',
+      // user,
+    });
+  } catch (err) {
+    return next(new AppError('User not created', 404));
+  }
+});
