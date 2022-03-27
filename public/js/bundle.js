@@ -8858,7 +8858,7 @@ exports.showAlert = showAlert;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.singup = void 0;
+exports.singUp = void 0;
 
 var _axios = _interopRequireDefault(require("axios"));
 
@@ -8870,7 +8870,7 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-var singup = /*#__PURE__*/function () {
+var singUp = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(name, email, password, passwordConfirm) {
     var res;
     return regeneratorRuntime.wrap(function _callee$(_context) {
@@ -8881,7 +8881,7 @@ var singup = /*#__PURE__*/function () {
             _context.next = 3;
             return (0, _axios.default)({
               method: 'POST',
-              url: 'http://127.0.0.1:3000/api/v1/users/singup',
+              url: '/api/v1/users/signup',
               // Hacemos la peticion a esta URL
               data: {
                 name: name,
@@ -8918,12 +8918,12 @@ var singup = /*#__PURE__*/function () {
     }, _callee, null, [[0, 7]]);
   }));
 
-  return function singup(_x, _x2, _x3, _x4) {
+  return function singUp(_x, _x2, _x3, _x4) {
     return _ref.apply(this, arguments);
   };
 }();
 
-exports.singup = singup;
+exports.singUp = singUp;
 },{"axios":"../../node_modules/axios/index.js","./alerts":"alerts.js"}],"login.js":[function(require,module,exports) {
 "use strict";
 
@@ -9469,7 +9469,7 @@ if (singUpForm) {
     var email = document.getElementById('email').value;
     var password = document.getElementById('password').value;
     var passwordConfirm = document.getElementById('passwordConfirm').value;
-    (0, _signUp.singup)(name, email, password, passwordConfirm);
+    (0, _signUp.singUp)(name, email, password, passwordConfirm);
   });
 } // 🔽 Si existe en la Pag se ejecutara el siguiente codigo.
 // Al dar summit se envian los valores de la contraseña y el password
@@ -9480,7 +9480,7 @@ if (loginForm) {
     e.preventDefault();
     var email = document.getElementById('email').value;
     var password = document.getElementById('password').value;
-    (0, _login.login)(email, password); // signUp(email, password)
+    (0, _login.login)(email, password);
   });
 }
 

@@ -1,7 +1,7 @@
 /* eslint-disable */
 import '@babel/polyfill';
 import { displayMap } from './mapbox';
-import { singup } from './signUp';
+import { singUp } from './signUp';
 import { login, logout } from './login';
 import { updateSettings } from './updateSettings';
 import { bookTour } from './stripe'; // Seleccionamos nuestro elemento de la pagina web
@@ -30,7 +30,7 @@ if (singUpForm) {
     const password = document.getElementById('password').value;
     const passwordConfirm = document.getElementById('passwordConfirm').value;
 
-    singup(name, email, password, passwordConfirm);
+    singUp(name, email, password, passwordConfirm);
   });
 }
 
@@ -42,7 +42,6 @@ if (loginForm) {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     login(email, password);
-    // signUp(email, password)
   });
 }
 
