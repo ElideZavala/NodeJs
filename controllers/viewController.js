@@ -46,6 +46,12 @@ exports.getTour = catchAsync(async (req, res, next) => {
   next();
 });
 
+exports.getSingupForm = (req, res) => {
+  res.status(200).render('singup', {
+    title: 'create your account!',
+  });
+};
+
 exports.getLoginForm = catchAsync(async (req, res) => {
   res.status(200).render('login', {
     title: 'Log into your account ',
@@ -91,21 +97,4 @@ exports.updateUserData = catchAsync(async (req, res, next) => {
     title: 'Your account ',
     user: updateUser,
   });
-});
-
-exports.createUser = catchAsync(async (req, res, next) => {
-  try {
-    // const { name, email, password, passwordConfirm } = req.body;
-
-    // const user = await User.create(name, email, password, passwordConfirm);
-
-    // res.redirect(req.originalUrl);
-
-    res.status(200).render('signUp', {
-      title: 'Create account ',
-      // user,
-    });
-  } catch (err) {
-    return next(new AppError('User not created', 404));
-  }
 });

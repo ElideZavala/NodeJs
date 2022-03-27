@@ -1,15 +1,15 @@
 /* eslint-disable */
 import '@babel/polyfill';
 import { displayMap } from './mapbox';
+import { singup } from './signUp';
 import { login, logout } from './login';
 import { updateSettings } from './updateSettings';
 import { bookTour } from './stripe'; // Seleccionamos nuestro elemento de la pagina web
 
 // DOM ELEMENTS
 const mapBox = document.getElementById('map');
+const singUpForm = document.querySelector('.form--singup');
 const loginForm = document.querySelector('.form--login');
-const singUpForm = document.querySelector('.form--signUp');
-const singUpBtn = document.querySelector('.btn--green');
 const logOutBtn = document.querySelector('.nav__el.nav__el--logout');
 const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
@@ -21,6 +21,19 @@ if (mapBox) {
   displayMap(locations);
 }
 
+if (singUpForm) {
+  singUpForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const passwordConfirm = document.getElementById('passwordConfirm').value;
+
+    singup(name, email, password, passwordConfirm);
+  });
+}
+
 // 🔽 Si existe en la Pag se ejecutara el siguiente codigo.
 // Al dar summit se envian los valores de la contraseña y el password
 if (loginForm) {
@@ -30,16 +43,6 @@ if (loginForm) {
     const password = document.getElementById('password').value;
     login(email, password);
     // signUp(email, password)
-  });
-}
-
-if (singUpForm) {
-  singUpForm.addEventListener('submit', (e) => {
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const passwordConfirm = document.getElementById('passwordConfirm').value;
-    signUp(name, email, password, passwordConfirm);
   });
 }
 

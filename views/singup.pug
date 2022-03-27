@@ -3,19 +3,19 @@ extends base
 block content 
     main.main
             .login-form
-                h2.heading-secondary.ma-bt-lg Log into your account
-                form.form.form--singUp
+                h2.heading-secondary.ma-bt-lg  create your account!
+                form.form.form--singup
                     .form__group
                         label.form__label(for='name') Add Name 
-                        input#email.form__input(type='name', placeholder='name', required)
+                        input#name.form__input(type='text', placeholder='name', required='')
                     .form__group
                         label.form__label(for='email') Email address
-                        input#email.form__input(type='email', placeholder='you@example.com', required)
+                        input#email.form__input(type='email', placeholder='you@example.com', required='')
                     .form__group.ma-bt-md
                         label.form__label(for='password') Password
                         input#password.form__input(type='password', placeholder='••••••••', required, minlength='8')
                     .form__group.ma-bt-md
-                        label.form__label(for='password') Password Confirm
+                        label.form__label(for='passwordConfirm') Confirm Password
                         input#passwordConfirm.form__input(type='password', placeholder='••••••••', required, minlength='8')
                     .form__group
-                        button.btn.btn--green SignUp 
+                        button.btn.btn--green SingUp 
