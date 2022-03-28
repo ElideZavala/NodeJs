@@ -8,7 +8,6 @@ const handleCastErrorDB = (err) => {
 const handleDuplicateFieldsDB = (err) => {
   //   const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0]; // Expresion regular // Mostrara los errores entre comillas
   const value = Object.values(err.keyValue)[0]; // Del objeto de valores, se toma el nombre como primer llave valor.
-  console.log(value);
 
   const message = `Duplicate field value: ${value}. Please use another value!`;
   return new AppError(message, 400);

@@ -182,10 +182,10 @@ tourSchema.pre(/^find/, function (next) {
   next();
 });
 
-tourSchema.post(/^find/, function (docs, next) {
-  console.log(`Query took ${Date.now() - this.start} milliseconds!`); // calculamos cuanto tiempo toma en ejecutarse
-  next();
-});
+// tourSchema.post(/^find/, function (docs, next) {
+//   console.log(`Query took ${Date.now() - this.start} milliseconds!`); // calculamos cuanto tiempo toma en ejecutarse
+//   next();
+// });
 
 // AGGREGATION MIDDLEWARE // Canalizacion de nuesto esquema formado en getTourStats con Tour.aggregate
 // tourSchema.pre('aggregate', function (next) {
