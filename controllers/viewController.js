@@ -89,7 +89,7 @@ exports.updateUserData = catchAsync(async (req, res, next) => {
     },
     {
       new: true, // Obtener lo nuevo, lo mas actual.
-      runValidator: true, // Ejecutar los validares
+      runValidators: true, // Ejecutar los validares
     }
   );
 

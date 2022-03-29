@@ -21,12 +21,13 @@ mongoose
   // .connect(process.env.DATABASE_LOCAL, {
   // Conectarnos a la base de datos
   .connect(DB, {
+    useUnifiedTopology: true,
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
   })
   .then(() => console.log('DB connection successful!'))
-  .catch((err) => console.log('ERROR'));
+  .catch((err) => console.log(err));
 
 // SERVER
 const port = process.env.PORT || 3000;
