@@ -19,6 +19,8 @@ const viewRouter = require('./routes/viewRoutes');
 
 const app = express();
 
+app.enable('trust proxy'); // Para que nuestra app confien y acepte nuestras proxys.
+
 // Instalamos morgan.
 // npm i morgan
 

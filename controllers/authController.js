@@ -13,20 +13,18 @@ const signToken = (id) => {
   });
 };
 
-const createSendToken = (user, statusCode, res) => {
+const createSendToken = (user, statusCode, req, res) => {
   const token = signToken(user._id);
-  const cookieOptions = {
+
+  // Adjuntar el cookie al objeto de respuesta. // we want send the tokes. + Opciones para la cookie.
+  //Fragmento de codigo que queremos guardar en nuestro navegador
+  res.cookie('jwt', token, {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ), // expira hasta que el navegador cierro o el cliente las elimine. apartir de la fecha actual // milisegundos
     httpOnly: true, // Permitira que el navegador no pueda acceder a la cookie ni modificarla de ninguna manera.
-  };
-
-  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
-
-  // Adjuntar el cookie al objeto de respuesta. // we want send the tokes. + Opciones para la cookie.
-  //Fragmento de codigo que queremos guardar en nuestro navegador
-  res.cookie('jwt', token, cookieOptions);
+    secure: req.secure || req.headers('x-forwarded-proto') === 'https', // El segundo valor es muy especifico de Heroku.
+  });
 
   // Remove password from output
   user.password = undefined;
@@ -56,7 +54,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   // console.log(url);
   await new Email(newUser, url).sendWelcome();
 
-  createSendToken(newUser, 201, res);
+  createSendToken(newUser, 201, req, res);
   // Generamos nuestro token con nuestro _id de mongo, la frase secreta y el tiempo en que expirara el token.
 });
 
@@ -76,7 +74,7 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   // 3) If everything ok, send token to client.
-  createSendToken(user, 200, res);
+  createSendToken(user, 200, req, res);
 });
 
 // Salir o cerrar sesion de nuestro logeo en la pagina.
@@ -246,7 +244,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   // 3) Update changedPasswordAt property for the user.
 
   // 4) Log the user in, send JWT
-  createSendToken(user, 200, res);
+  createSendToken(user, 200, req, res);
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
@@ -265,5 +263,5 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   // User.findByAndUpdate will NOT work as intended
 
   // 4) log user in, send JWT
-  createSendToken(user, 200, res);
+  createSendToken(user, 200, req, res);
 });
