@@ -44,3 +44,11 @@ process.on('unhandledRejection', (err) => {
     process.exit(1); // Apagar el Servidor.
   });
 });
+
+// Nuestra aplicacion es receptora y luego puede responder. // El termino SIGTERM hará que la aplicacion se cierre.
+process.on('SIGTERM', () => {
+  console.log('🤙🤟 SIGTERM RECEIVED. Shutting down gracefully');
+  server.close(() => {
+    console.log('💥 Precess terminated!');
+  });
+});
