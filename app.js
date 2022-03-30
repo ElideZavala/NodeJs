@@ -8,6 +8,7 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
+const cors = require('cors');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -29,6 +30,19 @@ app.set('view engine', 'pug'); // Motor de plantilla PUG.
 app.set('views', path.join(__dirname, 'views')); // Configuración de vista. // evita error si falta barra oblicua..
 
 // 1) GLOBAL MIDDLEWARES
+// Implement CORS
+app.use(cors());
+// Access-Control-Allow-Origin *
+// api.natours.com, front-end natours.com
+// app.use(
+//   cors({
+//     origin: 'https://www/natours.com', // Origen de nuestra Api en dado caso que solo queramos una o de otras paginas
+//   })
+// );
+
+app.options('*', cors()); // <-- a Todas las paginas.
+// app.options('/api/v1/tours/:id', cors()); // <-- a una URL especifica, se pudieran hacer modificaciones.
+
 // Serving static  files
 app.use(express.static(path.join(__dirname, 'public'))); // Por si nos falla la barra "/"
 // Todos los archivos estaticos se serviran automaticamente desde una carpeta llamada pública
