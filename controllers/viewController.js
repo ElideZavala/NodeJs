@@ -7,7 +7,7 @@ const Booking = require('../models/bookingModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
-exports.getOverview = catchAsync(async (req, res) => {
+exports.getOverview = catchAsync(async (req, res, next) => {
   // 1) Get tour data from collection
   const tours = await Tour.find();
   // 2) Buid template
@@ -34,7 +34,6 @@ exports.getTour = catchAsync(async (req, res, next) => {
     title: `${tour.name} Tour`,
     tour,
   });
-  next();
 });
 
 exports.getSingupForm = catchAsync(async (req, res) => {
