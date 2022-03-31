@@ -7,6 +7,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 const compression = require('compression');
 const cors = require('cors');
 
@@ -17,6 +18,7 @@ const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 const bookingRouter = require('./routes/bookingRoutes');
 const viewRouter = require('./routes/viewRoutes');
+const bookingController = require('./controllers/bookingController');
 
 const app = express();
 
@@ -64,7 +66,15 @@ const limiter = rateLimit({
 
 app.use('/api', limiter); //Afectara a todas las rutas que comiencen con esto, limitar a 100 valores.
 
-// Body parser, reading data from body into req.body
+// Cuando recibimos el cuerpo de Stripe, la funcion de Stripe que luego usaremos pra leer el cuerpo necesita este cuerpo en forma cruda, asi que basicamente como una cadena y no como JSON. NO PASE AL CODIGO SIGUIENTE 🔽.
+// Analizador del cuerpo CRUDO.
+app.post(
+  '/webhook-checkout',
+  express.raw({ type: 'aplication/json' }),
+  bookingController.webhookCheckout
+);
+
+// Body parser, reading data from body into req.body // Analizador Corporal.
 app.use(express.json({ limit: '10kb' })); // cuando tengamos un cuerpo con mas de 10kb no sera acceptado.
 // Obtener los valores del; formulario o codificacion de la Url.
 app.use(express.urlencoded({ extended: true, limit: '10kb' })); // limite de cambios con solo 10kb.
