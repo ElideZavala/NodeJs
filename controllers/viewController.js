@@ -45,7 +45,7 @@ exports.getTour = catchAsync(async (req, res, next) => {
 });
 
 exports.getSingupForm = (req, res) => {
-  res.status(200).render('singUp', {
+  res.status(200).render('singup', {
     title: 'create your account!',
   });
 };
