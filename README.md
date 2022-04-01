@@ -97,7 +97,7 @@ $ npm run debug (for debug)
 $ npm start
 ```
 ## About Bugs
-This project is still in modification, repair and improvement, if you want to help me, you can send me a message to the email zavalavinagreelide@gmail.com. Thank you!
+This project is still in modification, repair and improvement, if you want to help me, you can send me a message to the email zavalavinagreelide@gmail.comb. Thank you!
 ## Acknowledgement
 
 **This project is part of the online course I've taken at Udemy. Thanks to Jonas Schmedtmann for creating this course! Link to the course: [Node.js, Express, MongoDB & More: The Complete Bootcamp 2022](https://www.udemy.com/course/nodejs-express-mongodb-bootcamp/)**
