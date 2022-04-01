@@ -97,9 +97,9 @@ module.exports = (err, req, res, next) => {
     sendErrorDev(err, req, res);
   } else if (process.env.NODE_ENV === 'production') {
     // Este objeto de error usado es una copia de este error
-    let error = Object.assign(err);
+    // let error = Object.assign(err);
+    let error = { ...err };
     error.message = err.message;
-    console.log('error.constructor.name :>> ', error.constructor.name);
 
     if (error.name === 'CastError') error = handleCastErrorDB(error);
     if (error.code === 11000) error = handleDuplicateFieldsDB(error);
@@ -108,8 +108,6 @@ module.exports = (err, req, res, next) => {
     if (error.name === 'JsonWebTokenError') error = handleJWTError();
     if (error.name === 'TokenExpiredError') error = handleJWTExpiredError();
 
-    console.log(err.message);
-    console.log(error.message);
     sendErrorProd(error, req, res);
   }
 };

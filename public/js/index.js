@@ -56,7 +56,6 @@ if (userDataForm)
     form.append('email', document.getElementById('email').value); // agregamos los valores.
     form.append('photo', document.getElementById('photo').files[0]); // agregamos la foto que esta en el array.
     // const photo = document.querySelector('img').setAttribute('src', url);
-    console.log(form); // Datos del formulario.
     updateSettings(form, 'data');
   });
 
