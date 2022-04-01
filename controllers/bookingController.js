@@ -1,11 +1,10 @@
-const Stripe = require('stripe');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const Tour = require('../models/tourModel');
 const User = require('../models/userModel');
 const Booking = require('../models/bookingModel');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
 // const AppError = require('../utils/appError');
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 exports.getChekoutSession = catchAsync(async (req, res, next) => {
   // 1) Get the currently booked tour
@@ -17,21 +16,28 @@ exports.getChekoutSession = catchAsync(async (req, res, next) => {
     // success_url: `${req.protocol}://${req.get('host')}/my-tours/?tour=${
     //   req.params.tourId
     // }&user=${req.user.id}&price=${tour.price}`, // pagina ala que sera direcionado nuestro usuario.
-
-    success_url: `${req.protocol}://${req.get('host')}/my-tours`,
+    success_url: `${req.protocol}://${req.get('host')}/my-tours?alert=booking`,
     cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour.slug}`, // ( pagina a la que el usuario decide cancelar el pago )
     customer_email: req.user.email, // Especificar el correo del CLIENTE, es decir de nuestro usuario.
     client_reference_id: req.params.tourId, // tomamos una referencia al tour comprado del cliente.
+    mode: 'payment',
     line_items: [
       {
-        name: `${tour.name} Tour`,
-        description: tour.summary,
-        images: [
-          `${req.protocol}://${req.get('host')}/img/tours/${tour.imageCover}`,
-        ],
-        amount: tour.price * 100, // la cantidad esta dada en centabos por lo que multiplica por 100 para la moneda local.
-        currency: 'usd', // Tipo de moneda usada.
-        quantity: 1, // cantidad de producto
+        quantity: 1,
+        price_data: {
+          currency: 'usd', // Tipo de moneda usada.
+          unit_amount: tour.price * 100,
+          // amount: tour.price * 100, // la cantidad esta dada en centabos por lo que multiplica por 100 para la moneda local.
+          product_data: {
+            name: `${tour.name} Tour`,
+            description: tour.summary,
+            images: [
+              `${req.protocol}://${req.get('host')}/img/tours/${
+                tour.imageCover
+              }`,
+            ],
+          },
+        },
       },
     ],
   });
@@ -56,7 +62,9 @@ exports.getChekoutSession = catchAsync(async (req, res, next) => {
 const createBookingCheckot = async (session) => {
   const tour = session.client_reference_id;
   const user = (await User.findOne({ email: session.customer_email })).id; // Accedemos solo al id
-  const price = session.line_items[0].amount / 100; // lo convertimos nuevamente a dolares.
+  // const price = session.line_items[0].amount / 100; // lo convertimos nuevamente a dolares.
+  // const price = session.amount_total / 100; // lo convertimos nuevamente a dolares.
+  const { price } = await Tour.findOne({ _id: session.client_reference_id }); // lo convertimos nuevamente a dolares.
   await Booking.create({ tour, user, price });
 };
 
@@ -66,7 +74,7 @@ exports.webhookCheckout = (req, res, next) => {
   let event;
 
   try {
-    event = stripe.webhooks.constructEvent(
+    event = stripe.Webhook.construct_event(
       req.body,
       signature, // <-- En encabezado.
       process.env.STRIPE_WEBHOOK_SECRET // <-- Nuestra llave secreta. // Hacemos segura la peticion.

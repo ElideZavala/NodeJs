@@ -1,11 +1,19 @@
 // render renderizará la plantilla pug
 // Express buscara este archivo dentro de la carpeta que se especifico al principio.
-const Tour = require('../models/tourModel');
 // const Review = require('../models/reviewModel');
+const Tour = require('../models/tourModel');
 const User = require('../models/userModel');
 const Booking = require('../models/bookingModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+
+exports.alerts = (req, res, next) => {
+  const { alert } = req.query;
+  if (alert === 'booking')
+    res.locals.alert =
+      "Your booking was successful! Please check your email for a confirmation. If your booking doesn't show up here inmediatly, please como back later.";
+  next();
+};
 
 exports.getOverview = catchAsync(async (req, res, next) => {
   // 1) Get tour data from collection
@@ -36,17 +44,17 @@ exports.getTour = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getSingupForm = catchAsync(async (req, res) => {
+exports.getSingupForm = (req, res) => {
   res.status(200).render('singUp', {
     title: 'create your account!',
   });
-});
+};
 
-exports.getLoginForm = catchAsync(async (req, res) => {
+exports.getLoginForm = (req, res) => {
   res.status(200).render('login', {
     title: 'Log into your account ',
   });
-});
+};
 
 exports.getAccount = (req, res) => {
   res.status(200).render('account', {
